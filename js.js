@@ -14,8 +14,8 @@ Statuses:
 - 404 - method not allowed
 - 500 - server errors
 
-JSON.parse()
-JSON.stringify()
+JSON.parse()     // line => {}
+JSON.stringify() // {} => line
 
 - get users
 - create list
@@ -30,25 +30,29 @@ try {
 */
 
 // const myPromise = new Promise(resolve, reject);
+const arrUsers = [];
+
+function writeUserInHTML(users) {
+  const content = document.getElementById("content");
+  const ol = document.createElement("ol");
+
+  users.forEach((element) => {
+    const li = document.createElement("li");
+    console.log("element: ", element);
+    li.textContent = element.name.first + " " + element.name.last;
+    ol.appendChild(li);
+  });
+  content.appendChild(ol);
+}
 
 const getUsers = () => {
-  const users = fetch('https://randomuser.me/api/?results=10')
+  const users = fetch("https://randomuser.me/api/?results=10")
     .then((serverSpeak) => serverSpeak.json()) // json => {}
     .then((obj) => obj.results) // {} => {}.results
     .then((users) => {
-      const box = document.getElementById('content');
-      const ul = document.createElement('ol');
-
-      users.forEach((element) => {
-        const li = document.createElement('li');
-        console.log('element: ', element);
-        li.textContent = element.name.first + ' ' + element.name.last;
-        ul.appendChild(li);
-      });
-
-      box.appendChild(ul);
+      writeUserInHTML(users);
     })
-    .catch((error) => console.log('error: ', error));
+    .catch((error) => console.log("error: ", error));
   return users;
 };
 
@@ -76,6 +80,7 @@ TODO:
   - add filtering functionality:
     - add section with filter buttons to tha page
     - create filtering functionality
+//-----------------------------------------------\\
 
 const content = document.getElementById("content");
 const h1Morning = document.createElement("h1");
