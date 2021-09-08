@@ -30,32 +30,66 @@ try {
 */
 
 // const myPromise = new Promise(resolve, reject);
-const arrUsers = [];
 
-function writeUserInHTML(users) {
-  const content = document.getElementById("content");
-  const ol = document.createElement("ol");
+// 0 start
+let arrObjUsers;
+let arrTransit = [];
+const content = document.getElementById("content");
 
-  users.forEach((element) => {
-    const li = document.createElement("li");
-    console.log("element: ", element);
-    li.textContent = element.name.first + " " + element.name.last;
-    ol.appendChild(li);
-  });
-  content.appendChild(ol);
-}
-
+// 1 block fetch
 const getUsers = () => {
   const users = fetch("https://randomuser.me/api/?results=10")
     .then((serverSpeak) => serverSpeak.json()) // json => {}
-    .then((obj) => obj.results) // {} => {}.results
-    .then((users) => {
-      writeUserInHTML(users);
+    .then((obj) => obj.results) // {} => {}.results => objUsers
+    .then((objUsers) => {
+      arrObjUsers = objUsers;
+      console.log(arrObjUsers);
     })
     .catch((error) => console.log("error: ", error));
   return users;
 };
+getUsers();
 
+// 2
+const cleanContent = (element) => (element.innerHTML = null);
+
+function serchInArrUsers(serchElement) {
+  arrObjUsers.map((objUser) => {
+    arrTransit.push(objUser.name[serchElement]);
+  });
+}
+
+function writeInHTML(Arr) {
+  const ol = document.createElement("ol");
+
+  for (let i = 0; i < Arr.length; i++) {
+    const li = document.createElement("li");
+    li.textContent = Arr[i];
+    ol.appendChild(li);
+  }
+  content.appendChild(ol);
+}
+
+function general(clean, serch) {
+  //cleanContent(clean);
+  serchInArrUsers(serch);
+  console.log("must be [name,name] => ", arrTransit);
+  writeInHTML(arrTransit);
+}
+// button NAME
+const butUsersName = document.createElement("button");
+butUsersName.textContent = "Print NAMES";
+butUsersName.addEventListener("click", () => {
+  general(content, "first");
+});
+content.appendChild(butUsersName);
+// button LAST
+const butUsersSERNAME = document.createElement("button");
+butUsersSERNAME.textContent = "Print SERNAME";
+butUsersSERNAME.addEventListener("click", () => {
+  general(content, "last");
+});
+content.appendChild(butUsersSERNAME);
 // getUsers().then((users) => {
 //   const box = document.getElementById('content');
 //   const ul = document.createElement('ol');
@@ -69,8 +103,6 @@ const getUsers = () => {
 
 //   box.appendChild(ul);
 // });
-
-getUsers();
 
 /* 
 TODO:
