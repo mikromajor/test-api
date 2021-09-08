@@ -88,3 +88,4 @@ Async:
 // myPromise
 //   .then((data) => console.log('promise data: ', data))
 //   .catch((e) => console.log('promise error: ', e));
+//change
