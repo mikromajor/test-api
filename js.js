@@ -1,4 +1,3 @@
-
 /* 
 TODO:
   - split code to logical parts (separate functions)
@@ -11,55 +10,59 @@ TODO:
 */
 
 // init data
-const content = document.getElementById('content');
-const loader = document.querySelector('#loader');
-const btnGetUsers = document.querySelector('#btnGetUsers');
+const content = document.getElementById("content");
+const loader = document.querySelector("#loader");
+const buttonGetUsers = document.querySelector("#buttonGetUsers");
 
 // 1 fetch data
 const getUsers = () => {
-  const users = fetch('https://randomuser.me/api/?results=10')
+  const users = fetch("https://randomuser.me/api/?results=10")
     .then((serverSpeak) => serverSpeak.json()) // json => {}
     .then((obj) => obj.results) // {} => {}.results => objUsers
-    .catch((error) => console.log('error: ', error));
+    .catch((error) => console.log("error: ", error));
   return users;
 };
 
 const createUserCard = (user) => {
-  const li = document.createElement('li');
-  li.classList.add('card');
-
-  li.innerHTML = `
-  <img class="card__img" src="${user.picture.thumbnail}"/>
+  const li = document.createElement("li");
+  const div = document.createElement("div");
+  li.classList.add("card");
+  div.classList.add("card__content");
+  li.innerHTML = `<img class="card__img" src="${user.picture.large}"/>`;
+  div.innerHTML = `
   <h3 class="card__name">${user.name.first} ${user.name.last}</h3>
-  <p class="card__age">${user.dob.age}</p>
+  <p><strong> Gender: ${user.gender}</strong></p>
+  <p><strong> Country : ${user.location.country}</strong></p>
+  <p><strong> Age is Random: ${user.dob.age}</strong></p>
 `;
-
+  li.appendChild(div);
   return li;
 };
 
 const generateUsersList = (users) => {
-  const ul = document.createElement('ul');
-  ul.classList.add('users-list');
+  const ul = document.createElement("ul");
+  ul.classList.add("users-list");
 
   users.forEach((user) => {
-    ul.appendChild(createUserCard(user));
+    console.log(user);
+    return ul.appendChild(createUserCard(user));
   });
 
   return ul;
 };
 
-btnGetUsers.addEventListener('click', () => {
+buttonGetUsers.addEventListener("click", () => {
   content.innerHTML = null;
-  loader.classList.remove('loader--hidden');
+  loader.classList.remove("loader--hidden");
 
   getUsers()
     .then((users) => content.appendChild(generateUsersList(users)))
-    .then(() => loader.classList.add('loader--hidden'));
+    .then(() => loader.classList.add("loader--hidden"));
 });
 
 //init
 
-// romise 3 режима : ожид успех возраж
+// promise 3 режима : ожид успех возраж
 
 /*
 Async:
