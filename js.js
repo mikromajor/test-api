@@ -34,7 +34,10 @@ try {
 // 0 start
 let arrObjUsers;
 let arrTransit = [];
-const content = document.getElementById("content");
+const content = [0, content_1, content_2, content_3];
+content_1 = document.getElementById("content_1");
+content_2 = document.getElementById("content_2");
+content_3 = document.getElementById("content_3");
 
 // 1 block fetch
 const getUsers = () => {
@@ -51,7 +54,7 @@ const getUsers = () => {
 getUsers();
 
 // 2
-const cleanContent = (element) => (element.innerHTML = null);
+const cleancontent_1 = (element) => (element.innerHTML = null);
 
 function serchInArrUsers(serchElement) {
   arrObjUsers.map((objUser) => {
@@ -59,7 +62,7 @@ function serchInArrUsers(serchElement) {
   });
 }
 
-function writeInHTML(Arr) {
+function writeInHTML(Arr, NumbContent) {
   const ol = document.createElement("ol");
 
   for (let i = 0; i < Arr.length; i++) {
@@ -67,37 +70,37 @@ function writeInHTML(Arr) {
     li.textContent = Arr[i];
     ol.appendChild(li);
   }
-  content.appendChild(ol);
+  content[NumbContent].appendChild(ol);
 }
 
 function general(clean, serch) {
-  //cleanContent(clean);
+  //cleancontent_1(clean);
   serchInArrUsers(serch);
   console.log("must be [name,name] => ", arrTransit);
   writeInHTML(arrTransit);
 }
 // button NAME
 const butUsersName = document.createElement("button");
-butUsersName.textContent = "Print NAMES";
+butUsersName.textcontent_1 = "Print NAMES";
 butUsersName.addEventListener("click", () => {
-  general(content, "first");
+  general(content_1, "first");
 });
-content.appendChild(butUsersName);
+content_1.appendChild(butUsersName);
 // button LAST
 const butUsersSERNAME = document.createElement("button");
-butUsersSERNAME.textContent = "Print SERNAME";
+butUsersSERNAME.textcontent_2 = "Print SERNAME";
 butUsersSERNAME.addEventListener("click", () => {
-  general(content, "last");
+  general(content_2, "last");
 });
-content.appendChild(butUsersSERNAME);
+content_2.appendChild(butUsersSERNAME);
 // getUsers().then((users) => {
-//   const box = document.getElementById('content');
+//   const box = document.getElementById('content_1');
 //   const ul = document.createElement('ol');
 
 //   users.forEach((element) => {
 //     const li = document.createElement('li');
 //     // console.log('users: ', users);
-//     li.textContent = element.name.first + ' ' + element.name.last;
+//     li.textcontent_1 = element.name.first + ' ' + element.name.last;
 //     ul.appendChild(li);
 //   });
 
@@ -114,15 +117,15 @@ TODO:
     - create filtering functionality
 //-----------------------------------------------\\
 
-const content = document.getElementById("content");
+const content_1 = document.getElementById("content_1");
 const h1Morning = document.createElement("h1");
-h1Morning.textContent = "Morning";
-content.appendChild(h1Morning);
+h1Morning.textcontent_1 = "Morning";
+content_1.appendChild(h1Morning);
 const ul = document.createElement("ul");
 const liFirst = document.createElement("li");
-liFirst.textContent = "My Game - My Rulse";
+liFirst.textcontent_1 = "My Game - My Rulse";
 ul.appendChild(liFirst);
-content.appendChild(ul);
+content_1.appendChild(ul);
 let i = 0;
 const arrNumbers = [
   "first - I want get up at 9 o'clock",
@@ -138,18 +141,18 @@ const arrNumbers = [
 ];
 while (i < 10) {
   const li = document.createElement("li");
-  li.textContent = arrNumbers[i];
+  li.textcontent_1 = arrNumbers[i];
   ul.appendChild(li);
   i++;
 }
-content.appendChild(ul);
+content_1.appendChild(ul);
 const h1WorkingDay = document.createElement("h1");
-h1WorkingDay.textContent = "My working day";
+h1WorkingDay.textcontent_1 = "My working day";
 const p1 = document.createElement("p");
-p1.textContent = "10:00 - if it is = it's wrealy GOOD";
+p1.textcontent_1 = "10:00 - if it is = it's wrealy GOOD";
 const p2 = document.createElement("p");
-p2.textContent = "11:00 - not so bed";
-content.appendChild(h1WorkingDay);
-content.appendChild(p1);
-content.appendChild(p2);
+p2.textcontent_1 = "11:00 - not so bed";
+content_1.appendChild(h1WorkingDay);
+content_1.appendChild(p1);
+content_1.appendChild(p2);
 */
