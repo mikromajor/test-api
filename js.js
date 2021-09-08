@@ -13,10 +13,12 @@ TODO:
 const content = document.getElementById("content");
 const loader = document.querySelector("#loader");
 const buttonGetUsers = document.querySelector("#buttonGetUsers");
+const buttonGetFemale = document.querySelector("#buttonGetFemale");
+const buttonGetGirl = document.querySelector("#buttonGetGirl");
 
 // 1 fetch data
 const getUsers = () => {
-  const users = fetch("https://randomuser.me/api/?results=10")
+  const users = fetch("https://randomuser.me/api/?results=500")
     .then((serverSpeak) => serverSpeak.json()) // json => {}
     .then((obj) => obj.results) // {} => {}.results => objUsers
     .catch((error) => console.log("error: ", error));
@@ -39,27 +41,78 @@ const createUserCard = (user) => {
   return li;
 };
 
-const generateUsersList = (users) => {
+const generateFilteredUsersList = (users, numBtn, counter) => {
   const ul = document.createElement("ul");
   ul.classList.add("users-list");
 
   users.forEach((user) => {
     console.log(user);
-    return ul.appendChild(createUserCard(user));
-  });
+    if (counter >= 10) {
+      numBtn = 0;
+    }
 
+    if (
+      numBtn == 3 &&
+      user.dob.age > 16 &&
+      user.dob.age < 25 &&
+      user.gender == "female"
+    ) {
+      counter++;
+      return ul.appendChild(createUserCard(user));
+    } else if (numBtn == 2 && user.gender == "female") {
+      counter++;
+      return ul.appendChild(createUserCard(user));
+    } else if (numBtn == 1) {
+      counter++;
+      return ul.appendChild(createUserCard(user));
+    }
+  });
   return ul;
 };
+/*function filterUser(users, girl = false) {
+  const ul = document.createElement("ul");
+  ul.classList.add("users-list");
 
-buttonGetUsers.addEventListener("click", () => {
+  users.forEach((user) => {
+    if (girl && user.dob.age>18 && user.dob.age<20&&user.gender=="female") {
+      return ul.appendChild(createUserCard(user));
+    } else if (user.gender == "female") {
+      return ul.appendChild(createUserCard(user));
+    }
+  });
+}*/
+
+function add__cleener__loader() {
   content.innerHTML = null;
   loader.classList.remove("loader--hidden");
+}
 
+buttonGetUsers.addEventListener("click", () => {
+  add__cleener__loader();
   getUsers()
-    .then((users) => content.appendChild(generateUsersList(users)))
+    .then((users) =>
+      content.appendChild(generateFilteredUsersList(users, 1, 0))
+    )
     .then(() => loader.classList.add("loader--hidden"));
 });
 
+buttonGetFemale.addEventListener("click", () => {
+  add__cleener__loader();
+  getUsers()
+    .then((users) =>
+      content.appendChild(generateFilteredUsersList(users, 2, 0))
+    )
+    .then(() => loader.classList.add("loader--hidden"));
+});
+
+buttonGetGirl.addEventListener("click", () => {
+  add__cleener__loader();
+  getUsers()
+    .then((users) =>
+      content.appendChild(generateFilteredUsersList(users, 3, 0))
+    )
+    .then(() => loader.classList.add("loader--hidden"));
+});
 //init
 
 // promise 3 режима : ожид успех возраж
