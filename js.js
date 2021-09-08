@@ -1,109 +1,3 @@
-//https://randomuser.me/api/
-
-/*
-Methods:
-- GET
-- POST
-- PUT
-- DELETE
-
-Statuses:
-- 200 - success
-- 304 - redirect
-- 403 - not authorized
-- 404 - method not allowed
-- 500 - server errors
-
-JSON.parse()     // line => {}
-JSON.stringify() // {} => line
-
-- get users
-- create list
-- output users names
-
-
-try {
-  [].fakeMethod();
-} catch (e) {
-  console.log('catch error: ', e);
-}
-*/
-
-// const myPromise = new Promise(resolve, reject);
-
-// 0 start
-let arrObjUsers;
-let arrTransit = [];
-const content = document.getElementById("content");
-
-// 1 block fetch
-const getUsers = () => {
-  const users = fetch("https://randomuser.me/api/?results=10")
-    .then((serverSpeak) => serverSpeak.json()) // json => {}
-    .then((obj) => obj.results) // {} => {}.results => objUsers
-    .then((objUsers) => {
-      arrObjUsers = objUsers;
-      console.log(arrObjUsers);
-    })
-    .catch((error) => console.log("error: ", error));
-  return users;
-};
-getUsers();
-
-// 2
-const cleanContent = (element) => (element.innerHTML = null);
-
-function serchInArrUsers(serchElement) {
-  arrObjUsers.map((objUser) => {
-    arrTransit.push(objUser.name[serchElement]);
-  });
-}
-
-function writeInHTML(Arr) {
-  const ol = document.createElement("ol");
-
-  for (let i = 0; i < Arr.length; i++) {
-    const li = document.createElement("li");
-    li.textContent = Arr[i];
-    ol.appendChild(li);
-  }
-  content.appendChild(ol);
-}
-
-function general(clean, serch) {
-  //cleanContent(clean);
-  serchInArrUsers(serch);
-  console.log("must be [name,name] => ", arrTransit);
-  writeInHTML(arrTransit);
-}
-// button NAME
-const butUsersName = document.createElement("button");
-butUsersName.textContent = "Print NAMES";
-butUsersName.addEventListener("click", () => {
-  general(content, "first");
-});
-content.appendChild(butUsersName);
-// button LAST
-const butUsersSERNAME = document.createElement("button");
-butUsersSERNAME.textContent = "Print SERNAME";
-butUsersSERNAME.addEventListener("click", () => {
-  general(content, "last");
-});
-content.appendChild(butUsersSERNAME);
-// getUsers().then((users) => {
-//   const box = document.getElementById('content');
-//   const ul = document.createElement('ol');
-
-//   users.forEach((element) => {
-//     const li = document.createElement('li');
-//     // console.log('users: ', users);
-//     li.textContent = element.name.first + ' ' + element.name.last;
-//     ul.appendChild(li);
-//   });
-
-//   box.appendChild(ul);
-// });
-
 /* 
 TODO:
   - split code to logical parts (separate functions)
@@ -112,44 +6,85 @@ TODO:
   - add filtering functionality:
     - add section with filter buttons to tha page
     - create filtering functionality
-//-----------------------------------------------\\
-
-const content = document.getElementById("content");
-const h1Morning = document.createElement("h1");
-h1Morning.textContent = "Morning";
-content.appendChild(h1Morning);
-const ul = document.createElement("ul");
-const liFirst = document.createElement("li");
-liFirst.textContent = "My Game - My Rulse";
-ul.appendChild(liFirst);
-content.appendChild(ul);
-let i = 0;
-const arrNumbers = [
-  "first - I want get up at 9 o'clock",
-  "second - Then I go shiu-shiu",
-  "third - I brush teeth",
-  "fourth - a Dress",
-  "fifth - and go warming breakfast",
-  "sixth - Then I am eat 'soup' with 'sandwich'",
-  "seventh - ",
-  "eigth - ",
-  "nineth - ",
-  "tenth - ",
-];
-while (i < 10) {
-  const li = document.createElement("li");
-  li.textContent = arrNumbers[i];
-  ul.appendChild(li);
-  i++;
-}
-content.appendChild(ul);
-const h1WorkingDay = document.createElement("h1");
-h1WorkingDay.textContent = "My working day";
-const p1 = document.createElement("p");
-p1.textContent = "10:00 - if it is = it's wrealy GOOD";
-const p2 = document.createElement("p");
-p2.textContent = "11:00 - not so bed";
-content.appendChild(h1WorkingDay);
-content.appendChild(p1);
-content.appendChild(p2);
+  - page loading state
 */
+
+// init data
+const content = document.getElementById('content');
+const loader = document.querySelector('#loader');
+const btnGetUsers = document.querySelector('#btnGetUsers');
+
+// 1 fetch data
+const getUsers = () => {
+  const users = fetch('https://randomuser.me/api/?results=10')
+    .then((serverSpeak) => serverSpeak.json()) // json => {}
+    .then((obj) => obj.results) // {} => {}.results => objUsers
+    .catch((error) => console.log('error: ', error));
+  return users;
+};
+
+const createUserCard = (user) => {
+  const li = document.createElement('li');
+  li.classList.add('card');
+
+  li.innerHTML = `
+  <img class="card__img" src="${user.picture.thumbnail}"/>
+  <h3 class="card__name">${user.name.first} ${user.name.last}</h3>
+  <p class="card__age">${user.dob.age}</p>
+`;
+
+  return li;
+};
+
+const generateUsersList = (users) => {
+  const ul = document.createElement('ul');
+  ul.classList.add('users-list');
+
+  users.forEach((user) => {
+    ul.appendChild(createUserCard(user));
+  });
+
+  return ul;
+};
+
+btnGetUsers.addEventListener('click', () => {
+  content.innerHTML = null;
+  loader.classList.remove('loader--hidden');
+
+  getUsers()
+    .then((users) => content.appendChild(generateUsersList(users)))
+    .then(() => loader.classList.add('loader--hidden'));
+});
+
+//init
+
+// romise 3 режима : ожид успех возраж
+
+/*
+Async:
+- AJAX
+- Promise
+- setTimeout, setInterval
+- Web-workers
+*/
+
+// const myPromise = new Promise((resolve, reject) => {
+//   try {
+//     // let i = 0;
+//     // while (i < 5000) {
+//     //   i++;
+//     //   console.log(i);
+//     // }
+// // resolve('timer');
+
+//     setTimeout(() => {
+//       resolve('timer');
+//     }, 3000);
+//   } catch (e) {
+//     reject(e);
+//   }
+// });
+
+// myPromise
+//   .then((data) => console.log('promise data: ', data))
+//   .catch((e) => console.log('promise error: ', e));
