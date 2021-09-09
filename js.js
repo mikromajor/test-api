@@ -18,7 +18,7 @@ const buttonGetGirl = document.querySelector("#buttonGetGirl");
 
 // 1 fetch data
 const getUsers = () => {
-  const users = fetch("https://randomuser.me/api/?results=1000")
+  const users = fetch("https://randomuser.me/api/?results=200")
     .then((serverSpeak) => serverSpeak.json()) // json => {}
     .then((obj) => obj.results) // {} => {}.results => objUsers
     .catch((error) => console.log("error: ", error));
@@ -41,64 +41,78 @@ const createUserCard = (user) => {
   return li;
 };
 
-const generateFilteredUsersList = (users, numBtn, counter) => {
+const generateFilteredUsersList = (users, numBtn) => {
+  const arrImg = [];
+  let imgRepeatTest;
+  let counter = 0;
   const ul = document.createElement("ul");
   ul.classList.add("users-list");
-
-  users.forEach((user) => {
-    console.log(user);
-    if (counter >= 10) {
-      numBtn = 0;
+  for (let i = 0, z; i < users.length; i++) {
+    if (counter == 5) {
+      break;
     }
-    // no sens user.dob.age > 18 because user(random) send =  (22<age<78)
-    if (numBtn == 3 && user.dob.age > 76 && user.gender == "female") {
+    z = users[i].picture.large.replace(/\D*/gi, "");
+    if (
+      arrImg.some((el) => {
+        el == z;
+      })
+    ) {
+      imgRepeatTest = false;
+    } else {
+      imgRepeatTest = true;
+    }
+    //  user(random) send age  [start 23; end - 77]
+    //GIRL
+    if (
+      imgRepeatTest &&
+      numBtn == 3 &&
+      users[i].dob.age < 30 &&
+      users[i].gender == "female"
+    ) {
+      console.log(numBtn);
+      arrImg.push(z);
+      console.log(arrImg);
       counter++;
-      return ul.appendChild(createUserCard(user));
-    } else if (numBtn == 2 && user.gender == "female") {
+      ul.appendChild(createUserCard(users[i]));
+      //WOMAN
+    } else if (numBtn == 2 && users[i].gender == "female") {
+      console.log(numBtn);
+      arrImg.push(z);
+      console.log(arrImg);
       counter++;
-      return ul.appendChild(createUserCard(user));
+      ul.appendChild(createUserCard(users[i]));
+      //REST
     } else if (numBtn == 1) {
+      console.log(numBtn);
+      arrImg.push(z);
+      console.log(arrImg);
       counter++;
-      return ul.appendChild(createUserCard(user));
+      ul.appendChild(createUserCard(users[i]));
     }
-  });
+  }
   return ul;
 };
-/*function filterUser(users, girl = false) {
-  const ul = document.createElement("ul");
-  ul.classList.add("users-list");
 
-  users.forEach((user) => {
-    if (girl && user.dob.age>18 && user.dob.age<20&&user.gender=="female") {
-      return ul.appendChild(createUserCard(user));
-    } else if (user.gender == "female") {
-      return ul.appendChild(createUserCard(user));
-    }
-  });
-}*/
-
-function launchin__creatio__functions(NumberButton, startCounter) {
+function launchin__creation__functions(NumBtn) {
   content.innerHTML = null;
   loader.classList.remove("loader--hidden");
   getUsers()
     .then((users) =>
-      content.appendChild(
-        generateFilteredUsersList(users, NumberButton, startCounter)
-      )
+      content.appendChild(generateFilteredUsersList(users, NumBtn))
     )
     .then(() => loader.classList.add("loader--hidden"));
 }
 
 buttonGetUsers.addEventListener("click", () => {
-  launchin__creatio__functions(1, 0);
+  launchin__creation__functions(1);
 });
 
 buttonGetFemale.addEventListener("click", () => {
-  launchin__creatio__functions(2, 0);
+  launchin__creation__functions(2);
 });
 
 buttonGetGirl.addEventListener("click", () => {
-  launchin__creatio__functions(3, 0);
+  launchin__creation__functions(3);
 });
 //init
 
