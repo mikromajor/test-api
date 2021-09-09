@@ -18,7 +18,7 @@ const buttonGetGirl = document.querySelector("#buttonGetGirl");
 
 // 1 fetch data
 const getUsers = () => {
-  const users = fetch("https://randomuser.me/api/?results=500")
+  const users = fetch("https://randomuser.me/api/?results=1000")
     .then((serverSpeak) => serverSpeak.json()) // json => {}
     .then((obj) => obj.results) // {} => {}.results => objUsers
     .catch((error) => console.log("error: ", error));
@@ -50,13 +50,8 @@ const generateFilteredUsersList = (users, numBtn, counter) => {
     if (counter >= 10) {
       numBtn = 0;
     }
-
-    if (
-      numBtn == 3 &&
-      user.dob.age > 16 &&
-      user.dob.age < 25 &&
-      user.gender == "female"
-    ) {
+    // no sens user.dob.age > 18 because user(random) send =  (22<age<78)
+    if (numBtn == 3 && user.dob.age > 76 && user.gender == "female") {
       counter++;
       return ul.appendChild(createUserCard(user));
     } else if (numBtn == 2 && user.gender == "female") {
@@ -82,36 +77,28 @@ const generateFilteredUsersList = (users, numBtn, counter) => {
   });
 }*/
 
-function add__cleener__loader() {
+function launchin__creatio__functions(NumberButton, startCounter) {
   content.innerHTML = null;
   loader.classList.remove("loader--hidden");
+  getUsers()
+    .then((users) =>
+      content.appendChild(
+        generateFilteredUsersList(users, NumberButton, startCounter)
+      )
+    )
+    .then(() => loader.classList.add("loader--hidden"));
 }
 
 buttonGetUsers.addEventListener("click", () => {
-  add__cleener__loader();
-  getUsers()
-    .then((users) =>
-      content.appendChild(generateFilteredUsersList(users, 1, 0))
-    )
-    .then(() => loader.classList.add("loader--hidden"));
+  launchin__creatio__functions(1, 0);
 });
 
 buttonGetFemale.addEventListener("click", () => {
-  add__cleener__loader();
-  getUsers()
-    .then((users) =>
-      content.appendChild(generateFilteredUsersList(users, 2, 0))
-    )
-    .then(() => loader.classList.add("loader--hidden"));
+  launchin__creatio__functions(2, 0);
 });
 
 buttonGetGirl.addEventListener("click", () => {
-  add__cleener__loader();
-  getUsers()
-    .then((users) =>
-      content.appendChild(generateFilteredUsersList(users, 3, 0))
-    )
-    .then(() => loader.classList.add("loader--hidden"));
+  launchin__creatio__functions(3, 0);
 });
 //init
 
