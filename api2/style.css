@@ -1,0 +1,129 @@
+/*TOP canvas*/
+.border {
+  display: flex;
+  background: #4677ff;
+  padding: 40px;
+  width: 100%;
+  border-bottom: 0;
+}
+.border-top,
+.border-bottom {
+  border: 3px solid green;
+  height: 12px;
+  position: relative;
+}
+.border-top:before,
+.border-top:after,
+.border-bottom:before,
+.border-bottom:after {
+  content: "";
+  position: absolute;
+  border: 3px solid green;
+  width: 20px;
+  height: 20px;
+}
+.border-top:before {
+  border-radius: 0 100%;
+  left: -26px;
+  top: -26px;
+}
+.border-top:after {
+  border-radius: 100% 0;
+  right: -26px;
+  top: -26px;
+}
+.border-bottom:before {
+  border-radius: 100% 0;
+  left: -26px;
+  bottom: -26px;
+}
+.border-bottom:after {
+  border-radius: 0 100%;
+  right: -26px;
+  bottom: -26px;
+}
+.center {
+  border-left: 3px solid #af8b52;
+  border-right: 3px solid #af8b52;
+} /*
+.center p {
+  margin: 0;
+  padding: 40px 30px;
+  color: #91703b;
+  font-family: "Open Sans", sans-serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 18px;
+  text-align: center;
+  line-height: 1.5;
+}
+end TOP canva*/
+/*header {
+  display: flex;
+  flex-wrap: wrap;
+}*/
+.nav__ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  min-height: 30px;
+  width: 100%;
+  background-color: turquoise;
+}
+
+ul li {
+  list-style-type: none;
+  margin-right: 5%;
+}
+button {
+  background-color: rgb(252, 252, 149);
+}
+.loader {
+  display: block;
+  text-align: center;
+  margin-top: 100px;
+}
+
+.loader.loader__hidden {
+  display: none;
+}
+.card {
+  display: flex;
+  width: 100%;
+}
+.ulUserCard {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+.cardBox {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  height: 250px;
+  width: 170px;
+  margin-bottom: 20px;
+  background-color: lightblue;
+  border: 1px solid blue;
+}
+
+.cardFoto {
+  display: flex;
+  align-items: center;
+  height: 128px;
+  width: 128px;
+}
+.cardContent {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  height: 100px;
+}
+h3,
+p {
+  margin: 5px 0;
+  font-size: 18px;
+}

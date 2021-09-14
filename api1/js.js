@@ -22,7 +22,9 @@ const getUsers = () => {
     .then((serverSpeak) => serverSpeak.json()) // json => {}
     .then((obj) => obj.results) // {} => {}.results => objUsers
     .catch((error) => console.log("error: ", error));
-  return users;
+  console.log(users);
+
+  return users; // [{},{}]
 };
 
 const createUserCard = (user) => {
@@ -128,21 +130,24 @@ Async:
 
 // const myPromise = new Promise((resolve, reject) => {
 //   try {
-//     // let i = 0;
-//     // while (i < 5000) {
-//     //   i++;
-//     //   console.log(i);
-//     // }
-// // resolve('timer');
+//     let i = 0;
+//     const arr = [];
 
-//     setTimeout(() => {
-//       resolve('timer');
-//     }, 3000);
+//     while (i <= 20000) {
+//       arr.push("text hellou" + i + "'s iterations");
+//       console.log(arr[i] + "a little bit more text");
+//       i++;
+//     }
+//     resolve("well dane");
+
+//     // setTimeout(() => {
+//     //   resolve("second messenger timer");
+//     // }, 3000);
 //   } catch (e) {
 //     reject(e);
 //   }
 // });
 
 // myPromise
-//   .then((data) => console.log('promise data: ', data))
-//   .catch((e) => console.log('promise error: ', e));
+//   .then((data) => console.log("promise data: ", data))
+//   .catch((e) => console.log("promise error: ", e));
