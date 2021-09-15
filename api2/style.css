@@ -57,11 +57,12 @@
   text-align: center;
   line-height: 1.5;
 }
-end TOP canva*/
-/*header {
+*/
+header {
   display: flex;
   flex-wrap: wrap;
-}*/
+  width: 100%;
+}
 .nav__ul {
   display: flex;
   flex-wrap: wrap;
@@ -79,6 +80,12 @@ ul li {
 button {
   background-color: rgb(252, 252, 149);
 }
+button:hover {
+  cursor: pointer;
+}
+button:focus {
+  outline: 1px dashed red;
+}
 .loader {
   display: block;
   text-align: center;
@@ -88,6 +95,7 @@ button {
 .loader.loader__hidden {
   display: none;
 }
+
 .card {
   display: flex;
   width: 100%;
@@ -95,9 +103,13 @@ button {
 .ulUserCard {
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
+  justify-content: space-around;
   align-items: flex-start;
   width: 100%;
+}
+.liCard {
+  list-style-type: none;
+  margin: 30px;
 }
 .cardBox {
   display: flex;
