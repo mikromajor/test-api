@@ -26,9 +26,10 @@ const getArrObjUsers = () => {
 //creating access to button
 // starting asinch when button clicked
 //
-let but3 = button[3].addEventListener("click", () => chaingImg("L"));
-let but4 = button[4].addEventListener("click", () => chaingImg("M"));
-let but5 = button[5].addEventListener("click", () => chaingImg("S"));
+let but3 = button[3].addEventListener("click", () => changeImg("L"));
+let but4 = button[4].addEventListener("click", () => changeImg("M"));
+let but5 = button[5].addEventListener("click", () => changeImg("S"));
+let but6 = button[6].addEventListener("click", () => addColorInCard());
 
 //create button  -0 -1
 
@@ -136,21 +137,23 @@ function creatingUserCard(user) {
   h3.textContent = user.name.first + " " + user.name.last;
   const p = document.createElement("p");
   p.textContent = user.location.country;
+  const p1 = document.createElement("p");
+  p1.textContent = user.gender;
 
   const div_content = document.createElement("div");
   div_content.appendChild(h3);
   div_content.appendChild(p);
+  div_content.appendChild(p1);
   div_content.classList.add("cardContent");
 
   const div = document.createElement("div");
   div.appendChild(img);
   div.appendChild(div_content);
   div.classList.add("cardBox");
-  //////////////////
+
   const li = document.createElement("li");
   li.appendChild(div);
   li.classList.add("liCard");
-
   return li;
 }
 // testing  Timeout on Style Top
@@ -159,11 +162,7 @@ let timerID = setTimeout(() => {
   nav__ul.classList.add("nav__ul"), 3000;
 });
 
-function chaingImg(size) {
-  // remove foto from tags img
-  // choose size
-  // add foto to img
-  // chaing style foto
+function changeImg(size) {
   const imgs = document.getElementsByTagName("img");
   console.log(imgs);
 
@@ -191,5 +190,40 @@ function chaingImg(size) {
     imgs[i].classList.remove("M");
     imgs[i].classList.remove("S");
     imgs[i].classList.add(style);
+  }
+}
+
+function addColorInCard() {
+  let i;
+  const arr2arrsM_F = findGender();
+  for (i = 0; i < arr2arrsM_F[0].length; i++) {
+    arr2arrsM_F[0][i].classList.add("male");
+  }
+  for (i = 0; i < arr2arrsM_F[1].length; i++) {
+    arr2arrsM_F[1][i].classList.add("female");
+  }
+}
+
+function findGender(gender) {
+  const arrMales = [];
+  const arrFemales = [];
+  const arrMalesAndFemales = [];
+  const divs_cardContent = document.querySelectorAll("div.cardContent");
+
+  for (let i = 0; i < divs_cardContent.length; i++) {
+    if (divs_cardContent[i].lastChild.textContent == "male") {
+      arrMales.push(divs_cardContent[i].parentElement);
+    } else if (divs_cardContent[i].lastChild.textContent == "female") {
+      arrFemales.push(divs_cardContent[i].parentElement);
+    }
+  }
+  if (gender == "X") {
+    return arrMales;
+  } else if (gender == "Y") {
+    return arrFemales;
+  } else {
+    arrMalesAndFemales.push(arrMales);
+    arrMalesAndFemales.push(arrFemales);
+    return arrMalesAndFemales;
   }
 }

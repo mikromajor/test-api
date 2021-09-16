@@ -156,3 +156,9 @@ p {
 .loader.loader__hidden {
   display: none;
 }
+.male {
+  background-color: rgb(11, 169, 254);
+}
+.female {
+  background-color: rgb(243, 67, 96);
+}
