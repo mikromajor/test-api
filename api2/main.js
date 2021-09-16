@@ -2,6 +2,7 @@ const card = document.getElementById("card");
 const ul = document.createElement("ul");
 ul.classList.add("ulUserCard");
 card.appendChild(ul);
+
 const loader = document.querySelector("#loader");
 const button = document.getElementsByTagName("button");
 const whenLoading = document.getElementById("whenLoading");
@@ -25,12 +26,13 @@ const getArrObjUsers = () => {
 //creating access to button
 // starting asinch when button clicked
 //
-let but2 = button[2].addEventListener("click", () => {});
-let but3 = button[3].addEventListener("click", () => {});
+let but3 = button[3].addEventListener("click", () => chaingImg("L"));
+let but4 = button[4].addEventListener("click", () => chaingImg("M"));
+let but5 = button[5].addEventListener("click", () => chaingImg("S"));
 
 //create button  -0 -1
 
-for (let i = 0; i < button.length - 2; i++) {
+for (let i = 0; i < 3; i++) {
   button[i].addEventListener("click", () => {
     numBtn = i;
     clearingContent();
@@ -43,16 +45,13 @@ for (let i = 0; i < button.length - 2; i++) {
   });
 }
 function clearingContent() {
-  console.log("called 1 clearingContent()");
   clearingImgUrls();
   while (ul.firstChild) {
     ul.removeChild(ul.firstChild);
   }
 }
-//??????????????????????????????????????????????????
-function clearingImgUrls() {
-  console.log("called 2 clearingImgUrls()");
 
+function clearingImgUrls() {
   for (let i = arrSavedImg.length - 1; i >= 0; i--) {
     while (arrSavedImg[i].length >= 1) {
       arrSavedImg[i].pop();
@@ -65,7 +64,8 @@ function iteratingAarrObjUsers(arrObjUsers) {
     filteringGenderAndSameImg(arrObjUsers[i]);
   }
   console.log(" Amound kard =--> ", ul.childElementCount);
-  console.log("arr L FOTO -> ", arrSavedImg[2].length);
+  console.log("arr S FOTO -> ", arrSavedImg[2].length);
+  console.log("arr S FOTO URL-> ", arrSavedImg[2]);
 }
 
 let comparing = (str1, str2) => {
@@ -88,10 +88,10 @@ function filteringGenderAndSameImg(objUser) {
         })
       ) {
         saveImg(
-          objUser.picture.small,
-          objUser.picture.midle,
+          objUser.picture.thumbnail,
+          objUser.picture.medium,
           objUser.picture.large
-        ); // chack -> small, midle
+        );
         ul.appendChild(creatingUserCard(objUser));
       }
       break;
@@ -110,13 +110,27 @@ function filteringGenderAndSameImg(objUser) {
         ul.appendChild(creatingUserCard(objUser));
       }
       break;
+    case 2:
+      if (
+        !arrSavedImg[2].some((ImgUserUrl) => {
+          return comparing(ImgUserUrl, objUser.picture.large);
+        })
+      ) {
+        saveImg(
+          objUser.picture.small,
+          objUser.picture.midle,
+          objUser.picture.large
+        ); // chack -> small, midle
+        ul.appendChild(creatingUserCard(objUser));
+      }
+      break;
   }
 }
 
 function creatingUserCard(user) {
   const img = document.createElement("img");
   img.src = user.picture.large;
-  img.classList.add("cardFoto");
+  img.classList.add("L");
 
   const h3 = document.createElement("h3");
   h3.textContent = user.name.first + " " + user.name.last;
@@ -139,8 +153,43 @@ function creatingUserCard(user) {
 
   return li;
 }
-
+// testing  Timeout on Style Top
 const nav__ul = document.getElementById("nav__ul");
 let timerID = setTimeout(() => {
   nav__ul.classList.add("nav__ul"), 3000;
 });
+
+function chaingImg(size) {
+  // remove foto from tags img
+  // choose size
+  // add foto to img
+  // chaing style foto
+  const imgs = document.getElementsByTagName("img");
+  console.log(imgs);
+
+  let urlImg;
+  let style;
+  switch (size) {
+    case "S":
+      urlImg = arrSavedImg[0];
+      style = "S";
+      break;
+    case "M":
+      urlImg = arrSavedImg[1];
+      style = "M";
+      break;
+    case "L":
+      urlImg = arrSavedImg[2];
+      style = "L";
+      break;
+  }
+  console.log(urlImg);
+  for (let i = 0; i < imgs.length; i++) {
+    imgs[i].src = urlImg[i];
+
+    imgs[i].classList.remove("L");
+    imgs[i].classList.remove("M");
+    imgs[i].classList.remove("S");
+    imgs[i].classList.add(style);
+  }
+}

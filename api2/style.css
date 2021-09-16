@@ -1,4 +1,9 @@
-/*TOP canvas*/
+/*TOP */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
 .border {
   display: flex;
   background: #4677ff;
@@ -58,11 +63,7 @@
   line-height: 1.5;
 }
 */
-header {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-}
+/* BUTTON */
 .nav__ul {
   display: flex;
   flex-wrap: wrap;
@@ -73,7 +74,7 @@ header {
   background-color: turquoise;
 }
 
-ul li {
+nav ul li {
   list-style-type: none;
   margin-right: 5%;
 }
@@ -86,16 +87,8 @@ button:hover {
 button:focus {
   outline: 1px dashed red;
 }
-.loader {
-  display: block;
-  text-align: center;
-  margin-top: 100px;
-}
 
-.loader.loader__hidden {
-  display: none;
-}
-
+/* main CARD */
 .card {
   display: flex;
   width: 100%;
@@ -122,12 +115,25 @@ button:focus {
   border: 1px solid blue;
 }
 
-.cardFoto {
+.S {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  width: 32px;
+}
+.M {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  width: 64px;
+}
+.L {
   display: flex;
   align-items: center;
   height: 128px;
   width: 128px;
 }
+/*add 3 classes S M L*/
 .cardContent {
   display: flex;
   flex-flow: column wrap;
@@ -138,4 +144,15 @@ h3,
 p {
   margin: 5px 0;
   font-size: 18px;
+}
+
+/* LOADER */
+.loader {
+  display: block;
+  text-align: center;
+  margin-top: 100px;
+}
+
+.loader.loader__hidden {
+  display: none;
 }
