@@ -21,7 +21,7 @@ header {
 .border-top:after,
 .border-bottom:before,
 .border-bottom:after {
-  content: "";
+  content: '';
   position: absolute;
   border: 3px solid green;
   width: 20px;
@@ -115,6 +115,16 @@ button:focus {
   border: 1px solid blue;
 }
 
+.cardBox--male.colored {
+  background-color: deepskyblue;
+}
+
+.cardBox--female.colored {
+  background-color: pink;
+}
+.cardBox img.hidden {
+  display: none;
+}
 .S {
   display: flex;
   align-items: center;
