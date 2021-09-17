@@ -14,6 +14,7 @@ const arrSavedImg = [['smallImgUrls'], ['middleImgUrls'], ['largeImgUrls']];
 
 const arrButtonNames = [];
 let numBtn;
+
 // fetch
 const getArrObjUsers = () => {
   const arrObjUsers = fetch('https://randomuser.me/api/?results=20')
@@ -34,9 +35,9 @@ let but4 = buttons[4].addEventListener('click', () => changeImg('M'));
 let but5 = buttons[5].addEventListener('click', () => changeImg('S'));
 let but6 = buttons[6].addEventListener('click', () => addColorInCard());
 
-//create button  -0 -1
-
+//create button  -0 -1 and call results fetch
 for (let i = 0; i < 3; i++) {
+
   buttons[i].addEventListener('click', (e) => {
     // numBtn = i;
 
@@ -63,6 +64,7 @@ function filterUsers(arrObjUsers, userGender) {
 
   return arrObjUsers.filter((user) => user.gender === userGender);
 }
+
 function clearingContent() {
   // clearingImgUrls();
   while (ul.firstChild) {
@@ -78,10 +80,12 @@ function clearingContent() {
 //   }
 // }
 
+
 // function iteratingArrObjUsers(arrObjUsers) {
 //   // for (let i = 0; i < arrObjUsers.length; i++) {
 //   //   filterGenderAndSameImg(arrObjUsers[i]);
 //   // }
+
 
 //   arrObjUsers.forEach((element) => filterGenderAndSameImg(element));
 
