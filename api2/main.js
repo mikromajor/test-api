@@ -11,6 +11,22 @@ const arrSavedImg = [["smallImgUrls"], ["middleImgUrls"], ["largeImgUrls"]];
 
 const arrButtonNames = [];
 let numBtn;
+
+let but3 = button[3].addEventListener("click", () => changeImg("L"));
+let but4 = button[4].addEventListener("click", () => changeImg("M"));
+let but5 = button[5].addEventListener("click", () => changeImg("S"));
+let but6 = button[6].addEventListener("click", () => addColorInCard());
+
+//create button  -0 -1 and call results fetch
+for (let i = 0; i < 3; i++) {
+  button[i].addEventListener("click", () => {
+    numBtn = i;
+    clearingContent();
+    getArrObjUsers()
+      .then((arrObjUsers) => iterateArrObjUsers(arrObjUsers))
+      .then(() => loader.classList.add("loader__hidden"));
+  });
+}
 // fetch
 const getArrObjUsers = () => {
   const arrObjUsers = fetch("https://randomuser.me/api/?results=20")
@@ -21,30 +37,7 @@ const getArrObjUsers = () => {
 
   return arrObjUsers;
 };
-
 //
-//creating access to button
-// starting asinch when button clicked
-//
-let but3 = button[3].addEventListener("click", () => changeImg("L"));
-let but4 = button[4].addEventListener("click", () => changeImg("M"));
-let but5 = button[5].addEventListener("click", () => changeImg("S"));
-let but6 = button[6].addEventListener("click", () => addColorInCard());
-
-//create button  -0 -1
-
-for (let i = 0; i < 3; i++) {
-  button[i].addEventListener("click", () => {
-    numBtn = i;
-    clearingContent();
-    // if comming response from server -> starting processing
-    getArrObjUsers()
-      .then(
-        (arrObjUsers) => iteratingAarrObjUsers(arrObjUsers) //пока проходят здесь процедуры
-      )
-      .then(() => loader.classList.add("loader__hidden")); //запускается это
-  });
-}
 function clearingContent() {
   clearingImgUrls();
   while (ul.firstChild) {
@@ -60,13 +53,12 @@ function clearingImgUrls() {
   }
 }
 
-function iteratingAarrObjUsers(arrObjUsers) {
+function iterateArrObjUsers(arrObjUsers) {
   for (let i = 0; i < arrObjUsers.length; i++) {
     filteringGenderAndSameImg(arrObjUsers[i]);
   }
-  console.log(" Amound kard =--> ", ul.childElementCount);
+  console.log(" Amount card =--> ", ul.childElementCount);
   console.log("arr S FOTO -> ", arrSavedImg[2].length);
-  console.log("arr S FOTO URL-> ", arrSavedImg[2]);
 }
 
 let comparing = (str1, str2) => {
@@ -104,10 +96,10 @@ function filteringGenderAndSameImg(objUser) {
         })
       ) {
         saveImg(
-          objUser.picture.small,
-          objUser.picture.midle,
+          objUser.picture.thumbnail,
+          objUser.picture.medium,
           objUser.picture.large
-        ); // chack -> small, midle
+        );
         ul.appendChild(creatingUserCard(objUser));
       }
       break;
@@ -118,10 +110,10 @@ function filteringGenderAndSameImg(objUser) {
         })
       ) {
         saveImg(
-          objUser.picture.small,
-          objUser.picture.midle,
+          objUser.picture.thumbnail,
+          objUser.picture.medium,
           objUser.picture.large
-        ); // chack -> small, midle
+        );
         ul.appendChild(creatingUserCard(objUser));
       }
       break;
