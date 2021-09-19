@@ -27,6 +27,7 @@ function addCountriesList() {
 }
 // set country
 function selectChangeValue() {
+  clearContent("statistic");
   pullCovidInf(document.getElementById("countriesList").value);
 }
 // fetch 2
@@ -35,6 +36,8 @@ function getCovidInf() {
     .then((request) => request.json())
     .then((covidInf) => {
       console.log("fetch 2 - covid inf from country =>", covidInf);
+      if (covidInf.length === 0) {
+      }
       return covidInf;
     })
     .catch((error) => console.log("error in 2-nd fetch =>", error));
@@ -53,12 +56,9 @@ function pullCovidInf(country) {
 
   getCovidInf().then((Covid) => {
     // checking country  data for availability inform cov
-    const content = clearContent();
+    const content = clearContent("content");
     const h2 = document.createElement("h2");
-    if (
-      Covid[Covid.length - 1].Active == 0 ||
-      Covid[Covid.length - 31].Active == 0
-    ) {
+    if (Covid.length == 0 || Covid[Covid.length - 31].Active == 0) {
       h2.textContent =
         "Server hasn't information about covid-19 in this country";
       content.appendChild(h2);
@@ -74,7 +74,7 @@ function pullCovidInf(country) {
 }
 
 function creatContent() {
-  const content = clearContent();
+  const content = clearContent("content");
   const h2 = document.createElement("h2");
   h2.textContent = "Country - " + response[response.length - 1].Country;
 
@@ -82,17 +82,20 @@ function creatContent() {
   p0.textContent = `Date - ${response[response.length - 1].Date}`;
 
   const p1 = document.createElement("p");
-  p1.textContent = `Amount of infected - ${
-    response[response.length - 1].Active
+  p1.textContent = `Amount of Active - ${response[response.length - 1].Active}`;
+  const p2 = document.createElement("p");
+  p2.textContent = `Amount Confirmed  - ${
+    response[response.length - 1].Confirmed
   }`;
 
-  const p2 = document.createElement("p");
-  p2.textContent = `Amount deaths - ${response[response.length - 1].Deaths}`;
+  const p3 = document.createElement("p");
+  p3.textContent = `Amount of deaths - ${response[response.length - 1].Deaths}`;
 
   content.appendChild(h2);
   content.appendChild(p0);
   content.appendChild(p1);
   content.appendChild(p2);
+  content.appendChild(p3);
   content.classList.add("content");
 
   //create BUTTON
@@ -118,33 +121,47 @@ function creatContent() {
   content.appendChild(month);
 }
 
-function clearContent() {
-  const content = document.getElementById("content");
-  while (content.firstChild) {
-    content.removeChild(content.firstChild);
+function clearContent(id) {
+  const elemDOM = document.getElementById(id);
+  if (elemDOM.length <= 1) {
+    return elemDOM;
+  } else {
+    while (elemDOM.firstChild) {
+      elemDOM.removeChild(elemDOM.firstChild);
+    }
+    return elemDOM;
   }
-  return content;
 }
 
 function addStatistic(today, dayAgo, time) {
-  const cont = clearContent();
+  const statistic = clearContent("statistic");
   const deaths = document.createElement("p");
   deaths.textContent = "People DEATHS -" + (today.Deaths - dayAgo.Deaths);
+
   const confirmed = document.createElement("p");
   confirmed.textContent =
     "People CONFIRMED -" + (today.Confirmed - dayAgo.Confirmed);
+
   const active = document.createElement("p");
   active.textContent = "People ACTIVE -" + (today.Active - dayAgo.Active);
+
   const Time = document.createElement("h2");
   Time.textContent = `For last ${time}`;
-  const buttonReturn = document.createElement("button");
-  buttonReturn.textContent = "Return";
-  buttonReturn.addEventListener("click", () => creatContent());
-  cont.appendChild(Time);
-  cont.appendChild(active);
-  cont.appendChild(confirmed);
-  cont.appendChild(deaths);
-  cont.appendChild(buttonReturn);
+
+  if (!document.getElementById("buttonHidden")) {
+    const buttonHidden = document.createElement("button");
+    buttonHidden.id = "buttonHidden";
+    buttonHidden.textContent = "Hide/Visible statistics";
+    buttonHidden.addEventListener("click", () =>
+      statistic.classList.toggle("hidden")
+    );
+    document.getElementById("content").appendChild(buttonHidden);
+  }
+  statistic.appendChild(Time);
+  statistic.appendChild(active);
+  statistic.appendChild(confirmed);
+  statistic.appendChild(deaths);
+  statistic.classList.add("statistic");
 }
 
 //    S   T   A   R    T

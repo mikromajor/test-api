@@ -27,3 +27,11 @@ button {
   background-color: rgb(228, 171, 102);
   margin: 20px;
 }
+.statistic {
+  display: flex;
+  flex-flow: column;
+  border: 1px solid dimgray;
+}
+.hidden {
+  display: none;
+}
