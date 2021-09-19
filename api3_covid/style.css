@@ -6,7 +6,9 @@ form {
   flex-wrap: wrap;
   width: 100%;
 }
-
+body {
+  background-color: rgb(196, 190, 183);
+}
 select {
   display: block;
   margin-left: auto;

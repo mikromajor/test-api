@@ -1,6 +1,6 @@
 const select = document.getElementById("countriesList");
 let ignoreFirstClick = 0;
-const countryCovidInf = []; //Covid for statistic calculation
+const response = []; //Covid for statistic calculation
 let countryUrl;
 
 //  fetch 1 get country names
@@ -16,24 +16,19 @@ const getCountries = () => {
 };
 // call fetch get country names
 function addCountriesList() {
-  getCountries()
-    .then((countries) =>
-      countries.forEach((obj) => {
-        const option = document.createElement("option");
-        option.value = obj.Slug;
-        option.textContent = obj.Country;
-        select.appendChild(option);
-      })
-    ) // searching option.selected to call pullCovidInf(country)
-    .then(() => {
-      select.addEventListener("click", () => {
-        let select = document.getElementById("countriesList");
-        let selected = select.options[select.selectedIndex];
-        pullCovidInf(selected.value);
-      });
-    });
+  getCountries().then((countries) =>
+    countries.forEach((obj) => {
+      const option = document.createElement("option");
+      option.value = obj.Slug;
+      option.textContent = obj.Country;
+      select.appendChild(option);
+    })
+  );
 }
-
+// set country
+function selectChangeValue() {
+  pullCovidInf(document.getElementById("countriesList").value);
+}
 // fetch 2
 function getCovidInf() {
   const covidInf = fetch(countryUrl)
@@ -68,42 +63,59 @@ function pullCovidInf(country) {
         "Server hasn't information about covid-19 in this country";
       content.appendChild(h2);
     } else {
-      h2.textContent = "Country - " + Covid[Covid.length - 1].Country;
-
-      const p0 = document.createElement("p");
-      p0.textContent = `Date - ${Covid[Covid.length - 1].Date}`;
-
-      const p1 = document.createElement("p");
-      p1.textContent = `Amount of infected - ${Covid[Covid.length - 1].Active}`;
-
-      const p2 = document.createElement("p");
-      p2.textContent = `Amount deaths - ${Covid[Covid.length - 1].Deaths}`;
-
-      content.appendChild(h2);
-      content.appendChild(p0);
-      content.appendChild(p1);
-      content.appendChild(p2);
-      content.classList.add("content");
-
-      //create BUTTON
-      const week = document.createElement("button");
-      week.textContent = "Statistics for last week";
-      week.addEventListener("click", () => {
-        addStatistic(Covid[Covid.length - 1], Covid[Covid.length - 8], "week");
-      });
-      const month = document.createElement("button");
-      month.textContent = "Statistics for last month";
-      month.addEventListener("click", () => {
-        addStatistic(
-          Covid[Covid.length - 1],
-          Covid[Covid.length - 31],
-          "month"
-        );
-      });
-      content.appendChild(week);
-      content.appendChild(month);
+      while (response.length > 0) {
+        response.pop();
+      }
+      response.push(...Covid);
+      console.log("response -> ", response); //
+      creatContent();
     }
   });
+}
+
+function creatContent() {
+  const content = clearContent();
+  const h2 = document.createElement("h2");
+  h2.textContent = "Country - " + response[response.length - 1].Country;
+
+  const p0 = document.createElement("p");
+  p0.textContent = `Date - ${response[response.length - 1].Date}`;
+
+  const p1 = document.createElement("p");
+  p1.textContent = `Amount of infected - ${
+    response[response.length - 1].Active
+  }`;
+
+  const p2 = document.createElement("p");
+  p2.textContent = `Amount deaths - ${response[response.length - 1].Deaths}`;
+
+  content.appendChild(h2);
+  content.appendChild(p0);
+  content.appendChild(p1);
+  content.appendChild(p2);
+  content.classList.add("content");
+
+  //create BUTTON
+  const week = document.createElement("button");
+  week.textContent = "Statistics for last week";
+  week.addEventListener("click", () => {
+    addStatistic(
+      response[response.length - 1],
+      response[response.length - 8],
+      "week"
+    );
+  });
+  const month = document.createElement("button");
+  month.textContent = "Statistics for last month";
+  month.addEventListener("click", () => {
+    addStatistic(
+      response[response.length - 1],
+      response[response.length - 31],
+      "month"
+    );
+  });
+  content.appendChild(week);
+  content.appendChild(month);
 }
 
 function clearContent() {
@@ -127,7 +139,7 @@ function addStatistic(today, dayAgo, time) {
   Time.textContent = `For last ${time}`;
   const buttonReturn = document.createElement("button");
   buttonReturn.textContent = "Return";
-  buttonReturn.addEventListener("click", () => {});
+  buttonReturn.addEventListener("click", () => creatContent());
   cont.appendChild(Time);
   cont.appendChild(active);
   cont.appendChild(confirmed);

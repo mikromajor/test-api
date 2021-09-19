@@ -12,7 +12,12 @@
       <nav>
         <form>
           <label for="countriesList"></label>
-          <select name="countries" id="countriesList" autofocus>
+          <select
+            name="countries"
+            id="countriesList"
+            autofocus
+            onchange="selectChangeValue()"
+          >
             <option value="0">Choose a country:</option>
           </select>
         </form>
