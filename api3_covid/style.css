@@ -19,3 +19,9 @@ select {
   border: 50px;
   width: 100%;
 }
+button {
+  display: inline-flex;
+  flex-wrap: wrap;
+  background-color: rgb(228, 171, 102);
+  margin: 20px;
+}
