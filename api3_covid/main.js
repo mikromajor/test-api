@@ -100,6 +100,7 @@ function creatContent() {
 
   //create BUTTON
   const week = document.createElement("button");
+  week.id = "week";
   week.textContent = "Statistics for last week";
   week.addEventListener("click", () => {
     addStatistic(
@@ -109,6 +110,7 @@ function creatContent() {
     );
   });
   const month = document.createElement("button");
+  month.id = "month";
   month.textContent = "Statistics for last month";
   month.addEventListener("click", () => {
     addStatistic(
@@ -133,8 +135,10 @@ function clearContent(id) {
   }
 }
 
+// add Statistic inf
 function addStatistic(today, dayAgo, time) {
   const statistic = clearContent("statistic");
+
   const deaths = document.createElement("p");
   deaths.textContent = "People DEATHS -" + (today.Deaths - dayAgo.Deaths);
 
@@ -148,20 +152,20 @@ function addStatistic(today, dayAgo, time) {
   const Time = document.createElement("h2");
   Time.textContent = `For last ${time}`;
 
-  if (!document.getElementById("buttonHidden")) {
-    const buttonHidden = document.createElement("button");
-    buttonHidden.id = "buttonHidden";
-    buttonHidden.textContent = "Hide/Visible statistics";
-    buttonHidden.addEventListener("click", () =>
-      statistic.classList.toggle("hidden")
-    );
-    document.getElementById("content").appendChild(buttonHidden);
-  }
+  const buttonHideStatistic = document.createElement("button");
+  buttonHideStatistic.id = "buttonHideStatistic";
+  buttonHideStatistic.textContent = "Hide statistics";
+  buttonHideStatistic.addEventListener("click", () => {
+    clearContent("statistic");
+    statistic.classList.add("hidden");
+  });
+  statistic.classList.remove("hidden");
+  statistic.classList.add("content");
   statistic.appendChild(Time);
   statistic.appendChild(active);
   statistic.appendChild(confirmed);
   statistic.appendChild(deaths);
-  statistic.classList.add("statistic");
+  statistic.appendChild(buttonHideStatistic);
 }
 
 //    S   T   A   R    T
