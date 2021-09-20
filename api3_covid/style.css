@@ -16,14 +16,16 @@ select {
 }
 main {
   display: inline-flex;
-  justify-content: space-around;
+  justify-content: center;
   width: 98%;
 }
 .content {
   display: flex;
   flex-flow: column;
   align-items: center;
-  margin: 50px;
+
+  margin-left: 50px;
+  margin-top: 20px;
   padding: 20px;
   border-radius: 10px;
   border: 1px solid grey;
@@ -33,7 +35,7 @@ button {
   display: flex;
   flex-flow: column;
   background-color: rgb(228, 171, 102);
-  margin: 20px;
+  margin: 10px;
   border-radius: 70%;
   background-color: rgb(150, 120, 15);
 }

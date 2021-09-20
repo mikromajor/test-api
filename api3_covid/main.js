@@ -45,19 +45,12 @@ function getCovidInf() {
 }
 
 function pullCovidInf(country) {
-  // for ignore first click
-  if (country == ignoreFirstClick) {
-    return undefined;
-  }
-  ignoreFirstClick = country;
-
-  //
   countryUrl = "https://api.covid19api.com/country/" + country;
-
   getCovidInf().then((Covid) => {
     // checking country  data for availability inform cov
     const content = clearContent("content");
     const h2 = document.createElement("h2");
+
     if (Covid.length == 0 || Covid[Covid.length - 31].Active == 0) {
       h2.textContent =
         "Server hasn't information about covid-19 in this country";
@@ -99,8 +92,16 @@ function creatContent() {
   content.classList.add("content");
 
   //create BUTTON
+  const lastDay = document.createElement("button");
+  lastDay.textContent = "Statistics for last day";
+  lastDay.addEventListener("click", () => {
+    addStatistic(
+      response[response.length - 1],
+      response[response.length - 2],
+      "week"
+    );
+  });
   const week = document.createElement("button");
-  week.id = "week";
   week.textContent = "Statistics for last week";
   week.addEventListener("click", () => {
     addStatistic(
@@ -110,7 +111,6 @@ function creatContent() {
     );
   });
   const month = document.createElement("button");
-  month.id = "month";
   month.textContent = "Statistics for last month";
   month.addEventListener("click", () => {
     addStatistic(
@@ -119,8 +119,14 @@ function creatContent() {
       "month"
     );
   });
+  const inputMenu = document.createElement("button");
+  inputMenu.textContent = "Input menu";
+  inputMenu.addEventListener("click", () => createInputMenu());
+
+  content.appendChild(lastDay);
   content.appendChild(week);
   content.appendChild(month);
+  content.appendChild(inputMenu);
 }
 
 function clearContent(id) {
@@ -133,6 +139,39 @@ function clearContent(id) {
     }
     return elemDOM;
   }
+}
+
+// create Input Menu
+function createInputMenu() {
+  //const inputMenu = clearContent("inputMenu");
+  const inputMenu = document.getElementById("inputMenu");
+  inputMenu.classList.remove("hidden");
+  inputMenu.classList.add("content");
+
+  const labelFirstDate = document.createElement("label");
+  labelFirstDate.name = "inputFirstDate";
+  labelFirstDate.textContent = "Enter start period (number day ago)";
+
+  const inputFirstDate = document.createElement("input");
+  inputFirstDate.id = "inputFirstDate";
+  inputFirstDate.type = "Number";
+  inputFirstDate.value = 0;
+
+  const labelSecondDate = document.createElement("label");
+  labelSecondDate.name = "inputSecondDate";
+  labelSecondDate.textContent = "Enter end period (number day ago)";
+
+  const inputSecondDate = document.createElement("input");
+  inputSecondDate.id = "inputSecondDate";
+  inputSecondDate.type = "Number";
+
+  inputMenu.appendChild(labelFirstDate); //++++++++++++++++++++
+
+  addStatistic(
+    inputFirstDate.value,
+    inputSecondDate.value,
+    inputFirstDate.value - inputSecondDate.value
+  );
 }
 
 // add Statistic inf
