@@ -47,6 +47,7 @@ function getCovidInf(country) {
     .then((request) => request.json())
     .then((covidInf) => {
       console.log('fetch 2 - covid inf from country =>', covidInf);
+
       return covidInf;
     })
     .catch((error) => console.log('error in 2-nd fetch =>', error));
@@ -61,12 +62,13 @@ function pullCovidInf(country) {
     if (!Covid.length) {
       h2.textContent = "Server hasn't information about covid-19 in this country";
       content.appendChild(h2);
-    }
-    response.length = 0;
+    } else {
+      response.length = 0;
 
-    response.push(...Covid);
-    console.log('response -> ', response); //
-    createContent();
+      response.push(...Covid);
+      console.log('response -> ', response); //
+      createContent();
+    }
   });
 }
 
@@ -147,6 +149,9 @@ function createInputMenu() {
   inputFirstDate.type = 'Number';
   inputFirstDate.value = 0;
 
+  //input type='date'
+  //
+
   const labelSecondDate = document.createElement('label');
   labelSecondDate.name = 'inputSecondDate';
   labelSecondDate.textContent = 'Enter end period (number day ago)';
@@ -198,3 +203,12 @@ function addStatistic(today, dayAgo, time) {
 
 //    S   T   A   R    T
 document.addEventListener('DOMContentLoaded', () => addCountriesList());
+
+// document.querySelector('#form').addEventListener('submit', (e) => {
+//   e.preventDefault();
+
+//   const data = new FormData(e.target);
+
+//   fetch('test.com', {method: 'POST', body: data, 'Content-Type': 'multipart / form - data'});
+//   console.log(data.get('first'), data.get('last'), data.get('countries'));
+// });
