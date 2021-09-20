@@ -14,16 +14,46 @@ select {
   margin-left: auto;
   margin-right: auto;
 }
+main {
+  display: inline-flex;
+  justify-content: center;
+  width: 98%;
+}
 .content {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  border: 50px;
-  width: 100%;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+
+  margin-left: 50px;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid grey;
+  background-color: rgb(163, 129, 16);
 }
 button {
-  display: inline-flex;
-  flex-wrap: wrap;
+  display: flex;
+  flex-flow: column;
   background-color: rgb(228, 171, 102);
-  margin: 20px;
+  margin: 10px;
+  border-radius: 70%;
+  background-color: rgb(150, 120, 15);
+}
+button:hover {
+  cursor: pointer;
+}
+button:focus {
+  background-color: rgb(255, 146, 13);
+}
+.buttonOnOff {
+  background-color: rgb(255, 146, 13);
+}
+.hidden {
+  display: none;
+}
+h2 {
+  margin: 15px;
+}
+p {
+  margin: 10px;
 }
