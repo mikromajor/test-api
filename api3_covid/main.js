@@ -34,7 +34,10 @@ function addCountriesList() {
 }
 
 // set country
-select.addEventListener('change', () => pullCovidInf(select.value));
+select.addEventListener('change', () => {
+  clearContent('statistic');
+  pullCovidInf(select.value);
+});
 
 // fetch 2
 function getCovidInf(country) {
@@ -53,7 +56,7 @@ function getCovidInf(country) {
 function pullCovidInf(country) {
   getCovidInf(country).then((Covid) => {
     // checking country  data for availability inform cov
-    const content = clearContent();
+    const content = clearContent('content');
     const h2 = document.createElement('h2');
     if (!Covid.length) {
       h2.textContent = "Server hasn't information about covid-19 in this country";
@@ -63,12 +66,12 @@ function pullCovidInf(country) {
 
     response.push(...Covid);
     console.log('response -> ', response); //
-    creatContent();
+    createContent();
   });
 }
 
-function creatContent() {
-  const content = clearContent();
+function createContent() {
+  const content = clearContent('content');
   const h2 = document.createElement('h2');
   h2.textContent = 'Country - ' + response[response.length - 1].Country;
 
@@ -76,18 +79,26 @@ function creatContent() {
   p0.textContent = `Date - ${response[response.length - 1].Date}`;
 
   const p1 = document.createElement('p');
-  p1.textContent = `Amount of infected - ${response[response.length - 1].Active}`;
-
+  p1.textContent = `Amount of Active - ${response[response.length - 1].Active}`;
   const p2 = document.createElement('p');
-  p2.textContent = `Amount deaths - ${response[response.length - 1].Deaths}`;
+  p2.textContent = `Amount Confirmed  - ${response[response.length - 1].Confirmed}`;
+
+  const p3 = document.createElement('p');
+  p3.textContent = `Amount of deaths - ${response[response.length - 1].Deaths}`;
 
   content.appendChild(h2);
   content.appendChild(p0);
   content.appendChild(p1);
   content.appendChild(p2);
+  content.appendChild(p3);
   content.classList.add('content');
 
   //create BUTTON
+  const lastDay = document.createElement('button');
+  lastDay.textContent = 'Statistics for last day';
+  lastDay.addEventListener('click', () => {
+    addStatistic(response[response.length - 1], response[response.length - 2], 'week');
+  });
   const week = document.createElement('button');
   week.textContent = 'Statistics for last week';
   week.addEventListener('click', () => {
@@ -98,36 +109,91 @@ function creatContent() {
   month.addEventListener('click', () => {
     addStatistic(response[response.length - 1], response[response.length - 31], 'month');
   });
+  const inputMenu = document.createElement('button');
+  inputMenu.textContent = 'Input menu';
+  inputMenu.addEventListener('click', () => createInputMenu());
+
+  content.appendChild(lastDay);
   content.appendChild(week);
   content.appendChild(month);
+  content.appendChild(inputMenu);
 }
 
-function clearContent() {
-  const content = document.getElementById('content');
-  while (content.firstChild) {
-    content.removeChild(content.firstChild);
+function clearContent(id) {
+  const elemDOM = document.getElementById(id);
+  if (elemDOM.length <= 1) {
+    return elemDOM;
+  } else {
+    while (elemDOM.firstChild) {
+      elemDOM.removeChild(elemDOM.firstChild);
+    }
+    return elemDOM;
   }
-  return content;
 }
 
+// create Input Menu
+function createInputMenu() {
+  //const inputMenu = clearContent("inputMenu");
+  const inputMenu = document.getElementById('inputMenu');
+  inputMenu.classList.remove('hidden');
+  inputMenu.classList.add('content');
+
+  const labelFirstDate = document.createElement('label');
+  labelFirstDate.name = 'inputFirstDate';
+  labelFirstDate.textContent = 'Enter start period (number day ago)';
+
+  const inputFirstDate = document.createElement('input');
+  inputFirstDate.id = 'inputFirstDate';
+  inputFirstDate.type = 'Number';
+  inputFirstDate.value = 0;
+
+  const labelSecondDate = document.createElement('label');
+  labelSecondDate.name = 'inputSecondDate';
+  labelSecondDate.textContent = 'Enter end period (number day ago)';
+
+  const inputSecondDate = document.createElement('input');
+  inputSecondDate.id = 'inputSecondDate';
+  inputSecondDate.type = 'Number';
+
+  inputMenu.appendChild(labelFirstDate); //++++++++++++++++++++
+
+  addStatistic(
+    inputFirstDate.value,
+    inputSecondDate.value,
+    inputFirstDate.value - inputSecondDate.value
+  );
+}
+
+// add Statistic inf
 function addStatistic(today, dayAgo, time) {
-  const cont = clearContent();
+  const statistic = clearContent('statistic');
+
   const deaths = document.createElement('p');
   deaths.textContent = 'People DEATHS -' + (today.Deaths - dayAgo.Deaths);
+
   const confirmed = document.createElement('p');
   confirmed.textContent = 'People CONFIRMED -' + (today.Confirmed - dayAgo.Confirmed);
+
   const active = document.createElement('p');
   active.textContent = 'People ACTIVE -' + (today.Active - dayAgo.Active);
+
   const Time = document.createElement('h2');
   Time.textContent = `For last ${time}`;
-  const buttonReturn = document.createElement('button');
-  buttonReturn.textContent = 'Return';
-  buttonReturn.addEventListener('click', () => creatContent());
-  cont.appendChild(Time);
-  cont.appendChild(active);
-  cont.appendChild(confirmed);
-  cont.appendChild(deaths);
-  cont.appendChild(buttonReturn);
+
+  const buttonHideStatistic = document.createElement('button');
+  buttonHideStatistic.id = 'buttonHideStatistic';
+  buttonHideStatistic.textContent = 'Hide statistics';
+  buttonHideStatistic.addEventListener('click', () => {
+    clearContent('statistic');
+    statistic.classList.add('hidden');
+  });
+  statistic.classList.remove('hidden');
+  statistic.classList.add('content');
+  statistic.appendChild(Time);
+  statistic.appendChild(active);
+  statistic.appendChild(confirmed);
+  statistic.appendChild(deaths);
+  statistic.appendChild(buttonHideStatistic);
 }
 
 //    S   T   A   R    T
