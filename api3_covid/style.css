@@ -31,11 +31,15 @@ main {
   border: 1px solid grey;
   background-color: rgb(163, 129, 16);
 }
+#inputMenu {
+  max-width: 300px;
+}
 button {
   display: flex;
   flex-flow: column;
   background-color: rgb(228, 171, 102);
-  margin: 10px;
+  margin: 5px;
+  padding: 4px 26px;
   border-radius: 70%;
   background-color: rgb(150, 120, 15);
 }
@@ -51,9 +55,8 @@ button:focus {
 .hidden {
   display: none;
 }
-h2 {
-  margin: 15px;
-}
+h2,
+h3,
 p {
   margin: 10px;
 }

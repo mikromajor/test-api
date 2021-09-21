@@ -1,119 +1,132 @@
-const select = document.getElementById('countriesList');
-const response = []; //Covid for statistic calculation
+const select = document.getElementById("countriesList");
+const arrCovidInf = []; //Covid for statistic calculation
 
-//  fetch 1 get country names
-const getCountries = () => {
-  const countries = fetch('https://api.covid19api.com/countries')
-    .then((response) => {
-      if (!response.ok) {
-        // statuses 400+
-        // if(response.status >= 200 && response.status < 300){
-        throw new Error(`Response status is ${response.status}`);
-      } else {
-        return response;
-      }
-    })
-    .then((request) => request.json())
-    .then((data) => {
-      console.log('fetch 1 country names =>', data);
-      return data;
-    })
-    .catch((error) => console.log('error in 1-st fetch =>', error)); // 500+ statuses
-  return countries;
-};
-// call fetch get country names
+//    get Inf from  Server
+async function getServerInf(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Response status fetch is : ${response.status}`);
+  } else {
+    const arrObjects = await response.json();
+    return arrObjects;
+  }
+}
+
+// call fetch  get country names and covid inf
 function addCountriesList() {
-  getCountries().then((countries) =>
-    countries.forEach((obj) => {
-      const option = document.createElement('option');
-      option.value = obj.Slug;
-      option.textContent = obj.Country;
-      select.appendChild(option);
+  getServerInf("https://api.covid19api.com/countries")
+    .then((arrObjs) => {
+      console.log("fetch 1 country names =>", arrObjs);
+      arrObjs.forEach((obj) => {
+        const option = document.createElement("option");
+        option.value = obj.Slug;
+        option.textContent = obj.Country;
+        select.appendChild(option);
+      });
     })
-  );
+    .catch((e) => {
+      console.log(
+        "There has been a problem with your fetch 1 operation: " + e.message
+      );
+    });
 }
 
 // set country
-select.addEventListener('change', () => {
-  clearContent('statistic');
+select.addEventListener("change", () => {
+  const statistic = clearContent("statistic");
+  statistic.classList.add("hidden");
   pullCovidInf(select.value);
 });
 
-// fetch 2
-function getCovidInf(country) {
-  const countryUrl = 'https://api.covid19api.com/country/' + country;
-
-  const covidInf = fetch(countryUrl)
-    .then((request) => request.json())
-    .then((covidInf) => {
-      console.log('fetch 2 - covid inf from country =>', covidInf);
-
-      return covidInf;
-    })
-    .catch((error) => console.log('error in 2-nd fetch =>', error));
-  return covidInf;
-}
-
 function pullCovidInf(country) {
-  getCovidInf(country).then((Covid) => {
-    // checking country  data for availability inform cov
-    const content = clearContent('content');
-    const h2 = document.createElement('h2');
-    if (!Covid.length) {
-      h2.textContent = "Server hasn't information about covid-19 in this country";
-      content.appendChild(h2);
-    } else {
-      response.length = 0;
+  getServerInf("https://api.covid19api.com/country/" + country)
+    .then((Covid) => {
+      const h2 = document.createElement("h2");
+      if (!Covid.length) {
+        h2.textContent =
+          "Server hasn't information about covid-19 in this country";
+        document.getElementById("content").appendChild(h2);
+      } else {
+        arrCovidInf.length = 0;
 
-      response.push(...Covid);
-      console.log('response -> ', response); //
-      createContent();
-    }
-  });
+        arrCovidInf.push(...Covid);
+        console.log("arrCovidInf -> ", arrCovidInf); //
+        createContent();
+      }
+    })
+    .catch((error) => console.log("error in 2-nd fetch =>", error));
 }
 
+// C O N T E N T
 function createContent() {
-  const content = clearContent('content');
-  const h2 = document.createElement('h2');
-  h2.textContent = 'Country - ' + response[response.length - 1].Country;
+  const content = clearContent("content");
+  const h2 = document.createElement("h2");
+  h2.textContent = arrCovidInf[arrCovidInf.length - 1].Country;
 
-  const p0 = document.createElement('p');
-  p0.textContent = `Date - ${response[response.length - 1].Date}`;
+  const p0 = document.createElement("p");
+  p0.textContent = `Date - ${arrCovidInf[arrCovidInf.length - 1].Date}`;
 
-  const p1 = document.createElement('p');
-  p1.textContent = `Amount of Active - ${response[response.length - 1].Active}`;
-  const p2 = document.createElement('p');
-  p2.textContent = `Amount Confirmed  - ${response[response.length - 1].Confirmed}`;
+  const p1 = document.createElement("p");
+  p1.textContent = `Amount of Active - ${
+    arrCovidInf[arrCovidInf.length - 1].Active
+  }`;
+  const p2 = document.createElement("p");
+  p2.textContent = `Amount Confirmed  - ${
+    arrCovidInf[arrCovidInf.length - 1].Confirmed
+  }`;
 
-  const p3 = document.createElement('p');
-  p3.textContent = `Amount of deaths - ${response[response.length - 1].Deaths}`;
+  const p3 = document.createElement("p");
+  p3.textContent = `Amount of deaths - ${
+    arrCovidInf[arrCovidInf.length - 1].Deaths
+  }`;
 
   content.appendChild(h2);
   content.appendChild(p0);
   content.appendChild(p1);
   content.appendChild(p2);
   content.appendChild(p3);
-  content.classList.add('content');
+  content.classList.add("content");
 
   //create BUTTON
-  const lastDay = document.createElement('button');
-  lastDay.textContent = 'Statistics for last day';
-  lastDay.addEventListener('click', () => {
-    addStatistic(response[response.length - 1], response[response.length - 2], 'week');
+  const lastDay = document.createElement("button");
+  lastDay.textContent = "Statistics for last day";
+  lastDay.addEventListener("click", () => {
+    addStatistic(
+      arrCovidInf[arrCovidInf.length - 1],
+      arrCovidInf[arrCovidInf.length - 2],
+      "day"
+    );
   });
-  const week = document.createElement('button');
-  week.textContent = 'Statistics for last week';
-  week.addEventListener('click', () => {
-    addStatistic(response[response.length - 1], response[response.length - 8], 'week');
+  const week = document.createElement("button");
+  week.textContent = "Statistics for last week";
+  week.addEventListener("click", () => {
+    addStatistic(
+      arrCovidInf[arrCovidInf.length - 1],
+      arrCovidInf[arrCovidInf.length - 8],
+      "week"
+    );
   });
-  const month = document.createElement('button');
-  month.textContent = 'Statistics for last month';
-  month.addEventListener('click', () => {
-    addStatistic(response[response.length - 1], response[response.length - 31], 'month');
+  const month = document.createElement("button");
+  month.textContent = "Statistics for last month";
+  month.addEventListener("click", () => {
+    addStatistic(
+      arrCovidInf[arrCovidInf.length - 1],
+      arrCovidInf[arrCovidInf.length - 31],
+      "month"
+    );
   });
-  const inputMenu = document.createElement('button');
-  inputMenu.textContent = 'Input menu';
-  inputMenu.addEventListener('click', () => createInputMenu());
+  const inputMenu = document.createElement("button");
+  inputMenu.textContent = "Input menu";
+  inputMenu.addEventListener("click", () => {
+    const inputMenu = document.getElementById("inputMenu");
+    console.log("inputMenu.children.length  ->", inputMenu.children.length);
+    if (inputMenu.children.length > 1) {
+      inputMenu.classList.remove("hidden");
+    } else {
+      createInputMenu();
+    }
+  });
 
   content.appendChild(lastDay);
   content.appendChild(week);
@@ -133,67 +146,93 @@ function clearContent(id) {
   }
 }
 
-// create Input Menu
+//  I n p u t (input type='date')
 function createInputMenu() {
-  //const inputMenu = clearContent("inputMenu");
-  const inputMenu = document.getElementById('inputMenu');
-  inputMenu.classList.remove('hidden');
-  inputMenu.classList.add('content');
+  const inputMenu = document.getElementById("inputMenu");
+  inputMenu.classList.remove("hidden");
+  const h3Warning = document.createElement("h3");
+  h3Warning.textContent = "Error, you period - zero";
+  h3Warning.classList.add("hidden");
 
-  const labelFirstDate = document.createElement('label');
-  labelFirstDate.name = 'inputFirstDate';
-  labelFirstDate.textContent = 'Enter start period (number day ago)';
+  const headerMenu = document.createElement("h3");
+  headerMenu.textContent = "Choose the period what you need";
 
-  const inputFirstDate = document.createElement('input');
-  inputFirstDate.id = 'inputFirstDate';
-  inputFirstDate.type = 'Number';
+  const labelFirstDate = document.createElement("label");
+  labelFirstDate.name = "inputFirstDate";
+  labelFirstDate.textContent = "Start (number day ago)";
+
+  const inputFirstDate = document.createElement("input");
+  inputFirstDate.id = "inputFirstDate";
+  inputFirstDate.type = "Number";
   inputFirstDate.value = 0;
 
-  //input type='date'
-  //
+  const labelSecondDate = document.createElement("label");
+  labelSecondDate.name = "inputSecondDate";
+  labelSecondDate.textContent = "End (number day ago)";
 
-  const labelSecondDate = document.createElement('label');
-  labelSecondDate.name = 'inputSecondDate';
-  labelSecondDate.textContent = 'Enter end period (number day ago)';
+  const inputSecondDate = document.createElement("input");
+  inputSecondDate.id = "inputSecondDate";
+  inputSecondDate.type = "Number";
+  inputSecondDate.value = 100;
+  const buttonEnter = document.createElement("button");
+  buttonEnter.textContent = "ENTER";
+  buttonEnter.addEventListener("click", () => {
+    if (inputSecondDate.value - inputFirstDate.value == 0) {
+      h3Warning.classList.remove("hidden");
+    } else {
+      h3Warning.classList.add("hidden");
+      addStatistic(
+        arrCovidInf[arrCovidInf.length - 1 - inputFirstDate.value],
+        arrCovidInf[arrCovidInf.length - 1 - inputSecondDate.value],
+        inputSecondDate.value - inputFirstDate.value + " days"
+      );
+    }
+  });
 
-  const inputSecondDate = document.createElement('input');
-  inputSecondDate.id = 'inputSecondDate';
-  inputSecondDate.type = 'Number';
-
-  inputMenu.appendChild(labelFirstDate); //++++++++++++++++++++
-
-  addStatistic(
-    inputFirstDate.value,
-    inputSecondDate.value,
-    inputFirstDate.value - inputSecondDate.value
-  );
+  const buttonHide = document.createElement("button");
+  buttonHide.textContent = "Hide menu";
+  buttonHide.addEventListener("click", () => {
+    inputMenu.classList.add("hidden");
+  });
+  inputMenu.appendChild(headerMenu);
+  inputMenu.appendChild(labelFirstDate);
+  inputMenu.appendChild(inputFirstDate);
+  inputMenu.appendChild(labelSecondDate);
+  inputMenu.appendChild(inputSecondDate);
+  inputMenu.appendChild(buttonEnter);
+  inputMenu.appendChild(buttonHide);
+  inputMenu.appendChild(h3Warning);
+  inputMenu.classList.add("content");
 }
 
 // add Statistic inf
 function addStatistic(today, dayAgo, time) {
-  const statistic = clearContent('statistic');
+  const statistic = clearContent("statistic");
 
-  const deaths = document.createElement('p');
-  deaths.textContent = 'People DEATHS -' + (today.Deaths - dayAgo.Deaths);
+  const deaths = document.createElement("p");
+  deaths.textContent =
+    "People DEATHS: " + Math.abs(today.Deaths - dayAgo.Deaths);
 
-  const confirmed = document.createElement('p');
-  confirmed.textContent = 'People CONFIRMED -' + (today.Confirmed - dayAgo.Confirmed);
+  const confirmed = document.createElement("p");
+  confirmed.textContent =
+    "People CONFIRMED: " + Math.abs(today.Confirmed - dayAgo.Confirmed);
 
-  const active = document.createElement('p');
-  active.textContent = 'People ACTIVE -' + (today.Active - dayAgo.Active);
+  const active = document.createElement("p");
+  active.textContent =
+    "People ACTIVE: " + Math.abs(today.Active - dayAgo.Active);
 
-  const Time = document.createElement('h2');
+  const Time = document.createElement("h2");
   Time.textContent = `For last ${time}`;
 
-  const buttonHideStatistic = document.createElement('button');
-  buttonHideStatistic.id = 'buttonHideStatistic';
-  buttonHideStatistic.textContent = 'Hide statistics';
-  buttonHideStatistic.addEventListener('click', () => {
-    clearContent('statistic');
-    statistic.classList.add('hidden');
+  const buttonHideStatistic = document.createElement("button");
+  buttonHideStatistic.id = "buttonHideStatistic";
+  buttonHideStatistic.textContent = "Hide statistics";
+  buttonHideStatistic.addEventListener("click", () => {
+    clearContent("statistic");
+    statistic.classList.add("hidden");
   });
-  statistic.classList.remove('hidden');
-  statistic.classList.add('content');
+  statistic.classList.remove("hidden");
+  statistic.classList.add("content");
   statistic.appendChild(Time);
   statistic.appendChild(active);
   statistic.appendChild(confirmed);
@@ -202,7 +241,7 @@ function addStatistic(today, dayAgo, time) {
 }
 
 //    S   T   A   R    T
-document.addEventListener('DOMContentLoaded', () => addCountriesList());
+document.addEventListener("DOMContentLoaded", () => addCountriesList());
 
 // document.querySelector('#form').addEventListener('submit', (e) => {
 //   e.preventDefault();
