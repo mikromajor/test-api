@@ -9,8 +9,9 @@ form {
 body {
   background-color: rgb(196, 190, 183);
 }
-select {
-  display: block;
+#countriesList {
+  width: 500px;
+  margin-top: 30px;
   margin-left: auto;
   margin-right: auto;
 }

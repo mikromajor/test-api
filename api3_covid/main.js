@@ -116,13 +116,13 @@ function createContent() {
       "month"
     );
   });
-  const inputMenu = document.createElement("button");
-  inputMenu.textContent = "Input menu";
-  inputMenu.addEventListener("click", () => {
-    const inputMenu = document.getElementById("inputMenu");
-    console.log("inputMenu.children.length  ->", inputMenu.children.length);
-    if (inputMenu.children.length > 1) {
-      inputMenu.classList.remove("hidden");
+  const menuInput = document.createElement("button");
+  menuInput.textContent = "Input menu";
+  menuInput.addEventListener("click", () => {
+    const menuInput = document.getElementById("menuInput");
+    console.log("menuInput.children.length  ->", menuInput.children.length);
+    if (menuInput.children.length > 1) {
+      menuInput.classList.remove("hidden");
     } else {
       createInputMenu();
     }
@@ -131,7 +131,7 @@ function createContent() {
   content.appendChild(lastDay);
   content.appendChild(week);
   content.appendChild(month);
-  content.appendChild(inputMenu);
+  content.appendChild(menuInput);
 }
 
 function clearContent(id) {
@@ -146,12 +146,13 @@ function clearContent(id) {
   }
 }
 
-//  I n p u t (input type='date')
+//  I n p u t
 function createInputMenu() {
-  const inputMenu = document.getElementById("inputMenu");
-  inputMenu.classList.remove("hidden");
+  const menuInput = document.getElementById("menuInput");
+  menuInput.classList.remove("hidden");
+
   const h3Warning = document.createElement("h3");
-  h3Warning.textContent = "Error, you period - zero";
+  h3Warning.id = "warning";
   h3Warning.classList.add("hidden");
 
   const headerMenu = document.createElement("h3");
@@ -159,50 +160,71 @@ function createInputMenu() {
 
   const labelFirstDate = document.createElement("label");
   labelFirstDate.name = "inputFirstDate";
-  labelFirstDate.textContent = "Start (number day ago)";
+  labelFirstDate.textContent = "First date";
 
   const inputFirstDate = document.createElement("input");
   inputFirstDate.id = "inputFirstDate";
-  inputFirstDate.type = "Number";
-  inputFirstDate.value = 0;
+  inputFirstDate.type = "Date";
+  inputFirstDate.value = "2020 6 17";
 
   const labelSecondDate = document.createElement("label");
-  labelSecondDate.name = "inputSecondDate";
-  labelSecondDate.textContent = "End (number day ago)";
+  labelSecondDate.name = "inputLastDate";
+  labelSecondDate.textContent = "Last date";
 
-  const inputSecondDate = document.createElement("input");
-  inputSecondDate.id = "inputSecondDate";
-  inputSecondDate.type = "Number";
-  inputSecondDate.value = 100;
+  const inputLastDate = document.createElement("input");
+  inputLastDate.id = "inputLastDate";
+  inputLastDate.type = "Date";
+  inputLastDate.value = "2021 6 17";
+
   const buttonEnter = document.createElement("button");
   buttonEnter.textContent = "ENTER";
   buttonEnter.addEventListener("click", () => {
-    if (inputSecondDate.value - inputFirstDate.value == 0) {
-      h3Warning.classList.remove("hidden");
-    } else {
-      h3Warning.classList.add("hidden");
-      addStatistic(
-        arrCovidInf[arrCovidInf.length - 1 - inputFirstDate.value],
-        arrCovidInf[arrCovidInf.length - 1 - inputSecondDate.value],
-        inputSecondDate.value - inputFirstDate.value + " days"
-      );
-    }
+    calculationPeriod(inputFirstDate.value, inputLastDate.value);
   });
 
   const buttonHide = document.createElement("button");
   buttonHide.textContent = "Hide menu";
   buttonHide.addEventListener("click", () => {
-    inputMenu.classList.add("hidden");
+    menuInput.classList.add("hidden");
   });
-  inputMenu.appendChild(headerMenu);
-  inputMenu.appendChild(labelFirstDate);
-  inputMenu.appendChild(inputFirstDate);
-  inputMenu.appendChild(labelSecondDate);
-  inputMenu.appendChild(inputSecondDate);
-  inputMenu.appendChild(buttonEnter);
-  inputMenu.appendChild(buttonHide);
-  inputMenu.appendChild(h3Warning);
-  inputMenu.classList.add("content");
+  menuInput.appendChild(headerMenu);
+  menuInput.appendChild(labelFirstDate);
+  menuInput.appendChild(inputFirstDate);
+  menuInput.appendChild(labelSecondDate);
+  menuInput.appendChild(inputLastDate);
+  menuInput.appendChild(buttonEnter);
+  menuInput.appendChild(buttonHide);
+  menuInput.appendChild(h3Warning);
+  menuInput.classList.add("content");
+}
+
+function calculationPeriod(first, last) {
+  const h3Warning = document.getElementById("warning");
+  const dateToday = new Date();
+  const dateFirst = new Date(first);
+  const dateLast = new Date(last);
+  const T_F = Math.trunc((dateToday - dateFirst) / 86400000);
+  const T_L = Math.trunc((dateToday - dateLast) / 86400000);
+  console.log("T_F", T_F);
+  console.log("T_L", T_L);
+  if (T_F > arrCovidInf.length || T_L > arrCovidInf.length) {
+    h3Warning.textContent = `Available information about covid does not exceed ${arrCovidInf.length} days from today`;
+    h3Warning.classList.remove("hidden");
+  } else if (dateFirst - dateLast) {
+    h3Warning.classList.add("hidden");
+    addStatistic(
+      arrCovidInf[
+        arrCovidInf.length - 1 - Math.trunc((dateToday - dateFirst) / 86400000)
+      ],
+      arrCovidInf[
+        arrCovidInf.length - 1 - Math.trunc((dateToday - dateLast) / 86400000)
+      ],
+      Math.abs(T_F - T_L) + " days"
+    );
+  } else {
+    h3Warning.textContent = "Error, entered yours period is zero";
+    h3Warning.classList.remove("hidden");
+  }
 }
 
 // add Statistic inf
