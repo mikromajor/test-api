@@ -17,7 +17,6 @@ async function getServerInf(url) {
 function addCountriesList() {
   getServerInf("https://api.covid19api.com/countries")
     .then((arrObjs) => {
-      console.log("fetch 1 country names =>", arrObjs);
       arrObjs.forEach((obj) => {
         const option = document.createElement("option");
         option.value = obj.Slug;
@@ -51,7 +50,6 @@ function pullCovidInf(country) {
         arrCovidInf.length = 0;
 
         arrCovidInf.push(...Covid);
-        console.log("arrCovidInf -> ", arrCovidInf); //
         createContent();
       }
     })
@@ -120,18 +118,20 @@ function createContent() {
   menuInput.textContent = "Input menu";
   menuInput.addEventListener("click", () => {
     const menuInput = document.getElementById("menuInput");
-    console.log("menuInput.children.length  ->", menuInput.children.length);
     if (menuInput.children.length > 1) {
       menuInput.classList.remove("hidden");
     } else {
       createInputMenu();
     }
   });
+  const anchorForMenu = document.createElement("a");
+  anchorForMenu.href = "#menuInput";
+  anchorForMenu.appendChild(menuInput);
 
   content.appendChild(lastDay);
   content.appendChild(week);
   content.appendChild(month);
-  content.appendChild(menuInput);
+  content.appendChild(anchorForMenu);
 }
 
 function clearContent(id) {
@@ -151,12 +151,12 @@ function createInputMenu() {
   const menuInput = document.getElementById("menuInput");
   menuInput.classList.remove("hidden");
 
-  const h3Warning = document.createElement("h3");
-  h3Warning.id = "warning";
-  h3Warning.classList.add("hidden");
+  const warning = document.createElement("h4");
+  warning.id = "warning";
+  warning.classList.add("hidden");
 
-  const headerMenu = document.createElement("h3");
-  headerMenu.textContent = "Choose the period what you need";
+  const headerMenu = document.createElement("h4");
+  headerMenu.textContent = `Choose the period what you need max ${arrCovidInf.length} days ago`;
 
   const labelFirstDate = document.createElement("label");
   labelFirstDate.name = "inputFirstDate";
@@ -181,6 +181,9 @@ function createInputMenu() {
   buttonEnter.addEventListener("click", () => {
     calculationPeriod(inputFirstDate.value, inputLastDate.value);
   });
+  const anchorForStatistic = document.createElement("a");
+  anchorForStatistic.href = "#statistic";
+  anchorForStatistic.appendChild(buttonEnter);
 
   const buttonHide = document.createElement("button");
   buttonHide.textContent = "Hide menu";
@@ -192,26 +195,32 @@ function createInputMenu() {
   menuInput.appendChild(inputFirstDate);
   menuInput.appendChild(labelSecondDate);
   menuInput.appendChild(inputLastDate);
-  menuInput.appendChild(buttonEnter);
+  menuInput.appendChild(anchorForStatistic);
   menuInput.appendChild(buttonHide);
-  menuInput.appendChild(h3Warning);
+  menuInput.appendChild(warning);
   menuInput.classList.add("content");
 }
 
+//      calculation Period
 function calculationPeriod(first, last) {
-  const h3Warning = document.getElementById("warning");
+  const warning = document.getElementById("warning");
   const dateToday = new Date();
   const dateFirst = new Date(first);
   const dateLast = new Date(last);
-  const T_F = Math.trunc((dateToday - dateFirst) / 86400000);
-  const T_L = Math.trunc((dateToday - dateLast) / 86400000);
-  console.log("T_F", T_F);
-  console.log("T_L", T_L);
-  if (T_F > arrCovidInf.length || T_L > arrCovidInf.length) {
-    h3Warning.textContent = `Available information about covid does not exceed ${arrCovidInf.length} days from today`;
-    h3Warning.classList.remove("hidden");
+  const todayMinusFirstDate = Math.trunc((dateToday - dateFirst) / 86400000);
+  const todayMinusLastDate = Math.trunc((dateToday - dateLast) / 86400000);
+  console.log("todayMinusFirstDate < 0 ", todayMinusFirstDate);
+
+  if (
+    todayMinusFirstDate > arrCovidInf.length ||
+    todayMinusLastDate > arrCovidInf.length ||
+    todayMinusFirstDate < 1 ||
+    todayMinusLastDate < 1
+  ) {
+    warning.textContent = `No information available for this period`;
+    warning.classList.remove("hidden");
   } else if (dateFirst - dateLast) {
-    h3Warning.classList.add("hidden");
+    warning.classList.add("hidden");
     addStatistic(
       arrCovidInf[
         arrCovidInf.length - 1 - Math.trunc((dateToday - dateFirst) / 86400000)
@@ -219,11 +228,11 @@ function calculationPeriod(first, last) {
       arrCovidInf[
         arrCovidInf.length - 1 - Math.trunc((dateToday - dateLast) / 86400000)
       ],
-      Math.abs(T_F - T_L) + " days"
+      Math.abs(todayMinusFirstDate - todayMinusLastDate) + " days"
     );
   } else {
-    h3Warning.textContent = "Error, entered yours period is zero";
-    h3Warning.classList.remove("hidden");
+    warning.textContent = "Error, check yours input date";
+    warning.classList.remove("hidden");
   }
 }
 
