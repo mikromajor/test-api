@@ -7,7 +7,7 @@ form {
   width: 100%;
 }
 body {
-  background-color: rgb(196, 190, 183);
+  background-image: linear-gradient(90deg, white, blue);
 }
 #countriesList {
   width: 500px;
@@ -30,7 +30,8 @@ main {
   padding: 20px;
   border-radius: 10px;
   border: 1px solid grey;
-  background-color: rgb(163, 129, 16);
+  /* box-shadow: 30px 25px 5px rgb(255, 255, 255); */
+  background-image: linear-gradient(0deg, white, rgb(15, 207, 255));
 }
 #inputMenu {
   max-width: 300px;
@@ -38,21 +39,18 @@ main {
 button {
   display: flex;
   flex-flow: column;
-  background-color: rgb(228, 171, 102);
   margin: 5px;
   padding: 4px 26px;
   border-radius: 70%;
-  background-color: rgb(150, 120, 15);
+  background-color: rgb(145, 161, 214);
 }
 button:hover {
   cursor: pointer;
 }
 button:focus {
-  background-color: rgb(255, 146, 13);
+  background-color: rgb(255, 253, 162);
 }
-.buttonOnOff {
-  background-color: rgb(255, 146, 13);
-}
+
 .hidden {
   display: none;
 }
