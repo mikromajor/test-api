@@ -21,7 +21,7 @@ header {
 .border-top:after,
 .border-bottom:before,
 .border-bottom:after {
-  content: '';
+  content: "";
   position: absolute;
   border: 3px solid green;
   width: 20px;
@@ -50,28 +50,14 @@ header {
 .center {
   border-left: 3px solid #af8b52;
   border-right: 3px solid #af8b52;
-} /*
-.center p {
-  margin: 0;
-  padding: 40px 30px;
-  color: #91703b;
-  font-family: "Open Sans", sans-serif;
-  font-style: italic;
-  font-weight: 300;
-  font-size: 18px;
-  text-align: center;
-  line-height: 1.5;
 }
-*/
 /* BUTTON */
+
 .nav__ul {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
-  min-height: 30px;
+  justify-content: center;
   width: 100%;
-  background-color: turquoise;
 }
 
 nav ul li {
@@ -80,6 +66,7 @@ nav ul li {
 }
 button {
   background-color: rgb(252, 252, 149);
+  border-radius: 20px;
 }
 button:hover {
   cursor: pointer;
@@ -113,6 +100,13 @@ button:focus {
   margin-bottom: 20px;
   background-color: lightblue;
   border: 1px solid blue;
+  transition: all 0.5s ease-out;
+}
+
+.cardBox:hover {
+  border: 1px solid rgb(19, 216, 19);
+  border-radius: 10px;
+  box-shadow: 10px 10px rgb(194, 191, 191);
 }
 
 .cardBox--male.colored {
@@ -125,30 +119,34 @@ button:focus {
 .cardBox img.hidden {
   display: none;
 }
+.bigCard {
+  height: 400px;
+  width: 300px;
+}
 .S {
-  display: flex;
-  align-items: center;
   height: 32px;
   width: 32px;
 }
 .M {
-  display: flex;
-  align-items: center;
   height: 64px;
   width: 64px;
 }
 .L {
-  display: flex;
-  align-items: center;
   height: 128px;
   width: 128px;
+}
+.S,
+.L,
+.M {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 /*add 3 classes S M L*/
 .cardContent {
   display: flex;
   flex-flow: column wrap;
   align-items: center;
-  height: 100px;
 }
 h3,
 p {
@@ -171,4 +169,7 @@ p {
 }
 .female {
   background-color: rgb(243, 67, 96);
+}
+.hidden {
+  display: none;
 }
