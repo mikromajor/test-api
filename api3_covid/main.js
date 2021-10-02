@@ -223,10 +223,10 @@ function calculationPeriod(first, last) {
     warning.classList.add("hidden");
     addStatistic(
       arrCovidInf[
-        arrCovidInf.length - 1 - Math.trunc((dateToday - dateFirst) / 86400000)
+        arrCovidInf.length - 1 - todayMinusFirstDate
       ],
       arrCovidInf[
-        arrCovidInf.length - 1 - Math.trunc((dateToday - dateLast) / 86400000)
+        arrCovidInf.length - 1 - todayMinusLastDate
       ],
       Math.abs(todayMinusFirstDate - todayMinusLastDate) + " days"
     );

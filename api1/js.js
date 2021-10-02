@@ -1,13 +1,4 @@
-/* 
-TODO:
-  - split code to logical parts (separate functions)
-  - change output of user's info to a card view (name, avatar, gender, age, etc.)
-  - add styles to card on your own (possible to use external libraries as Bootstrap, etc.)
-  - add filtering functionality:
-    - add section with filter buttons to tha page
-    - create filtering functionality
-  - page loading state
-*/
+
 
 // init data
 const content = document.getElementById("content");
@@ -83,7 +74,7 @@ const generateFilteredUsersList = (users, numBtn) => {
       console.log(arrImg);
       counter++;
       ul.appendChild(createUserCard(users[i]));
-      //REST
+      //ALL
     } else if (numBtn == 1) {
       console.log(numBtn);
       arrImg.push(z);
